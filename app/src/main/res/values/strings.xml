@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Happy</string>
+    <string name="hello_world">Happy ! ! !</string>
+
+    <!-- МЕНЮ -->
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
+
+    <array name="nav_drawer_icons">
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+        <item>@mipmap/ic_my_calendar_menu_item</item>
+    </array>
+
+    <string-array name="nav_drawer_items">
+        <item>title_calculator</item>
+        <item>title_my_calendar</item>
+        <item>title_action_club</item>
+        <item>title_events</item>
+        <item>title_news</item>
+        <item>title_about</item>
+        <item>title_test_1</item>
+    </string-array>
+
+    <string name="title_calculator">Калькулятор</string>
+    <string name="title_my_calendar">Пунк 2</string>
+    <string name="title_action_club">Пунк 3</string>
+    <string name="title_events">Пунк 4</string>
+    <string name="title_news">Пунк 5</string>
+    <string name="title_about">Пунк 6</string>
+    <string name="title_test_1">Пунк 7</string>
+
+    <string name="volume">Объем</string>
+
+
+    <!-- Товары -->
+    <string name="product">Товар</string>
+    <string name="remove">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="search">Поиск</string>
+    <string name="category">Категория</string>
+    <string name="name_product">Имя продукта</string>
+    <string name="price">Цена</string>
+    <string name="from">От</string>
+    <string name="before">до</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TEMP -->
+
+
+</resources>

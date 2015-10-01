@@ -1,0 +1,58 @@
+<resources>
+
+
+    <style name="AppTheme" parent="AppTheme.Base">
+
+    </style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!-- Support library compatibility -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="colorControlNormal">@color/color_white_smoky</item>
+        <item name="colorControlActivated">?attr/colorAccent</item>
+        <item name="colorControlHighlight">@color/ripple_material_light</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <style name="ToolBarStyle.Base" parent="">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppTlum.ActionBar</item>
+    </style>
+
+    <style name="ToolBarStyle.AppTlum" parent="ToolBarStyle.Base">
+        <item name="titleTextAppearance">@style/TextAppearance.Widget.AppTlum.Toolbar.Title</item>
+    </style>
+
+    <style name="TextAppearance.Widget.AppTlum.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTlum.ActionBar" parent="style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/color_background_app</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/color_background_app</item>
+    </style>
+
+    <style name="StyleListView.Base" parent="@android:style/Widget.AbsListView">
+        <item name="android:scrollbars">none</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:listSelector">@drawable/bg_pressed</item>
+        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:choiceMode">singleChoice</item>
+    </style>
+
+
+</resources>
