@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.RedactProductCalculatorActivity;
+import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 
@@ -253,13 +254,16 @@ public class CalculatorFragment extends Fragment {
 
     private void goAddProduct() {
         Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
-        intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, new Product());
+        Product product = new Product();
+        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
+        intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
         startActivityForResult(intent, OK_ADD_PRODUCT_CALCULATOR);
 
     }
 
     private void goRedactProduct(Product product, int position) {
         listPositionRedact = position;
+        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
         Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
         intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
         startActivityForResult(intent, OK_REDACT_PRODUCT_CALCULATOR);

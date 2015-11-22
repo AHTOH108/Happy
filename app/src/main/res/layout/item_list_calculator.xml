@@ -12,9 +12,9 @@
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#d6fcff"
-        android:padding="12dp"
-        android:orientation="vertical">
+        android:background="#f3fff3"
+        android:orientation="vertical"
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,19 +24,22 @@
             <TextView
                 android:id="@+id/textViewBrand"
                 android:layout_width="0dp"
-                android:textSize="16sp"
-                android:text="Шоклолад Милка"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.7"
+                android:text="Шоклолад Милка"
+                android:textColor="#001eff"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textViewShop"
                 android:layout_width="0dp"
-
-                android:text="Вольный купец"
-                android:textSize="14sp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3" />
+                android:layout_weight="0.3"
+                android:background="#ff6b6b"
+                android:padding="5dp"
+                android:text="Вольный ку"
+                android:textColor="#fff"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,15 +47,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
-            android:background="#ecd0ff"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:layout_weight="0.5"
+                android:background="#f4f4f4"
                 android:orientation="horizontal">
 
                 <TextView
@@ -60,8 +67,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/textViewValuta"
+                    android:gravity="right"
+                    android:text="1234"
+                    android:textColor="#006403"
                     android:textSize="20sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -79,8 +89,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="15dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:layout_weight="0.5"
+                android:background="#f4f4f4"
                 android:orientation="horizontal">
 
                 <TextView
@@ -89,7 +103,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_marginRight="10dp"
+                    android:textColor="#006403"
                     android:layout_toLeftOf="@+id/textViewUnits"
+                    android:gravity="right"
+                    android:text="12312"
                     android:textSize="20sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -99,7 +117,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:text="uhfvv" />
 
             </RelativeLayout>
         </LinearLayout>

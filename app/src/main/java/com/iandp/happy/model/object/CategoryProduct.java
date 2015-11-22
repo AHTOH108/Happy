@@ -16,6 +16,11 @@ public class CategoryProduct implements Parcelable {
         this.name = "";
     }
 
+    public CategoryProduct(String name) {
+        this.id = -1;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

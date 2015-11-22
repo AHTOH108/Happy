@@ -63,7 +63,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/brand"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:focusable="true"/>
             </android.support.design.widget.TextInputLayout>
 
             <RelativeLayout
@@ -129,7 +130,8 @@
                 <Spinner
                     android:id="@+id/spinnerUnits"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
                     android:layout_alignParentBottom="true"
                     android:layout_alignTop="@+id/textInputLayoutVolume"
                     android:layout_marginLeft="16dp"

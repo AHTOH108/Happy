@@ -90,6 +90,24 @@ public class RedactProductCalculatorActivity extends AppCompatActivity {
                 saveProductAndClose();
             }
         });
+
+        editTextPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    editTextPrice.setText("");
+            }
+        });
+
+        editTextVolume.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    editTextVolume.setText("");
+            }
+        });
+
+        editTextBrand.requestFocus();
     }
 
     private void setupSpinnerView() {
@@ -173,9 +191,12 @@ public class RedactProductCalculatorActivity extends AppCompatActivity {
 
         try {
             price = Double.parseDouble(editTextPrice.getText().toString());
-            volume = Double.parseDouble(editTextVolume.getText().toString());
         } catch (NumberFormatException e) {
             price = -1;
+        }
+        try {
+            volume = Double.parseDouble(editTextVolume.getText().toString());
+        } catch (NumberFormatException e) {
             volume = -1;
         }
 
