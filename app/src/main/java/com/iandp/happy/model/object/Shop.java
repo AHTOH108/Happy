@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Anton on 21.09.2015.
+ * Created on 21.09.2015.
  */
 public class Shop implements Parcelable {
     private int id;

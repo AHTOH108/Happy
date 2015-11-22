@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 
 import com.iandp.happy.R;
-import com.iandp.happy.temp.CalculatorFragment;
+import com.iandp.happy.fragment.CalculatorFragment;
 import com.iandp.happy.temp.ListProductFragment;
 import com.iandp.happy.temp.NavMenuItem;
 import com.iandp.happy.temp.TestFragment;
@@ -36,15 +36,14 @@ public class MainActivity extends BaseActivity {
 
     private static final int MAX_WIDTH_SIDE_NAV_DPI = 320;
 
-    private static final int NAV_MENU_POSITION_PROFILE = 0;
-    private static final int NAV_MENU_POSITION_MY_CALENDAR = 1;
-    private static final int NAV_MENU_POSITION_ACTION_CLUB = 2;
-    private static final int NAV_MENU_POSITION_EVENTS = 3;
-    private static final int NAV_MENU_POSITION_NEWS = 4;
+    private static final int NAV_MENU_POSITION_CALCULATOR= 0;
+    private static final int NAV_MENU_POSITION_PRODUCT = 1;
+    private static final int NAV_MENU_POSITION_SHOPPING_LIST = 2;
+    private static final int NAV_MENU_POSITION_SHOP = 3;
+    private static final int NAV_MENU_POSITION_TEST = 4;
     private static final int NAV_MENU_POSITION_ABOUT = 5;
-    private static final int NAV_MENU_POSITION_TEST_1 = 6;
 
-    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_EVENTS;
+    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_CALCULATOR;
 
     private static final String CURRENT_MENU_POSITION = "CurrentMenuPosition";
 
@@ -165,28 +164,26 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragmentCurrent = fragmentManager.findFragmentById(R.id.content_frame);
 
+
         Fragment fragmentNew = null;
 
         switch (position) {
-            case NAV_MENU_POSITION_PROFILE:
+            case NAV_MENU_POSITION_CALCULATOR:
                 fragmentNew = new CalculatorFragment();
                 break;
-            case NAV_MENU_POSITION_MY_CALENDAR:
+            case NAV_MENU_POSITION_PRODUCT:
                 fragmentNew = new ListProductFragment();
                 break;
-            case NAV_MENU_POSITION_ACTION_CLUB:
+            case NAV_MENU_POSITION_SHOPPING_LIST:
                 fragmentNew = new TestFragment();
                 break;
-            case NAV_MENU_POSITION_EVENTS:
+            case NAV_MENU_POSITION_SHOP:
                 fragmentNew = new TestFragment();
                 break;
-            case NAV_MENU_POSITION_NEWS:
+            case NAV_MENU_POSITION_TEST:
                 fragmentNew = new TestFragment();
                 break;
             case NAV_MENU_POSITION_ABOUT:
-                fragmentNew = new TestFragment();
-                break;
-            case NAV_MENU_POSITION_TEST_1:
                 fragmentNew = new TestFragment();
                 break;
             default:
@@ -216,7 +213,7 @@ public class MainActivity extends BaseActivity {
 
         setTitle(navMenuItems.get(currentItemPosition).getTitle());
 
-        if ((currentItemPosition == NAV_MENU_POSITION_EVENTS) || (currentItemPosition == NAV_MENU_POSITION_ABOUT)) {
+        if ((currentItemPosition == NAV_MENU_POSITION_ABOUT)) {
             setVisibilityLogoTitle(true);
         } else {
             setVisibilityLogoTitle(false);

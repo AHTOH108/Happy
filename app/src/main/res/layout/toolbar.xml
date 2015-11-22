@@ -5,7 +5,7 @@
     style="@style/ToolBarStyle.AppTlum"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
+    android:background="#f1f1f1"
     android:elevation="0dp"
     android:minHeight="?attr/actionBarSize"
     tools:ignore="ContentDescription">
@@ -14,7 +14,7 @@
         android:id="@+id/imgview_logo_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_title"
+        android:src="@mipmap/ic_launcher"
         android:visibility="gone" />
 
 </android.support.v7.widget.Toolbar>

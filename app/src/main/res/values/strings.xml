@@ -18,37 +18,56 @@
 
     <string-array name="nav_drawer_items">
         <item>title_calculator</item>
-        <item>title_my_calendar</item>
-        <item>title_action_club</item>
-        <item>title_events</item>
-        <item>title_news</item>
+        <item>title_product</item>
+        <item>title_shopping_list</item>
+        <item>title_shop</item>
+        <item>title_test</item>
         <item>title_about</item>
-        <item>title_test_1</item>
     </string-array>
 
     <string name="title_calculator">Калькулятор</string>
-    <string name="title_my_calendar">Пунк 2</string>
-    <string name="title_action_club">Пунк 3</string>
-    <string name="title_events">Пунк 4</string>
-    <string name="title_news">Пунк 5</string>
-    <string name="title_about">Пунк 6</string>
-    <string name="title_test_1">Пунк 7</string>
+    <string name="title_product">Товары</string>
+    <string name="title_shopping_list">Список покупок</string>
+    <string name="title_shop">Магазины</string>
+    <string name="title_test">Test</string>
+    <string name="title_about">О приложении</string>
 
+
+    <string name="cancel">Отмена</string>
     <string name="volume">Объем</string>
+    <string name="search">Поиск</string>
+    <string name="price">Цена</string>
+
+
+
+    <string name="error">Неизвестная ошибка</string>
+    <string name="error_edit_text">Данные некорректны</string>
+
+    <!-- Калькулятор -->
+    <string name="calculator">Калькулятор</string>
+    <string name="category_product">Название товара</string>
+    <string name="string_rub">руб.</string>
+    <string name="per">за</string>
+    <string name="result">Итого: </string>
+    <string name="add_new_brand">Добавить новый бренд</string>
+    <string name="brand">Марка:</string>
+    <string name="apply">Применить</string>
+    <string name="select_shop">Укажите магазин</string>
 
 
     <!-- Товары -->
     <string name="product">Товар</string>
     <string name="remove">Удалить</string>
     <string name="add">Добавить</string>
-    <string name="search">Поиск</string>
+
     <string name="category">Категория</string>
     <string name="name_product">Имя продукта</string>
-    <string name="price">Цена</string>
+
     <string name="from">От</string>
     <string name="before">до</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="action_settings">Settings</string>

@@ -7,14 +7,14 @@
     <color name="window_background">@color/color_white</color>
     <color name="text_color_primary">@color/color_anthracite</color>
 
-    <color name="color_background_app">#b413ff13</color>
+    <color name="color_background_app">#cec226d7</color>
 
     <color name="color_white">#ffffffff</color>
     <color name="color_black_alpha_24">#3c000000</color>
     <color name="color_anthracite">#ff453f4d</color>
     <color name="color_white_smoky">#ffededed</color>
 
-    <color name="color_light_green">#a2ed5a</color>
+    <color name="color_light_green">#1c8c29</color>
 
 
 </resources>

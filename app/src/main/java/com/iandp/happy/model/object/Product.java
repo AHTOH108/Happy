@@ -9,19 +9,21 @@ import java.util.ArrayList;
 public class Product implements Parcelable {
 
     private int id;
-    private String name;
+    private CategoryProduct categoryProduct;
+    private String brand;
     private String description;
-    private Units unit;
-    private ArrayList<OfferShop> offerShop;
-    private String image;
+    private int rating;
+    private ArrayList<Cost> costList;
+    private ArrayList<Image> imageList;
 
     public Product() {
         this.id = -1;
-        this.name = "";
+        this.categoryProduct = new CategoryProduct();
+        this.brand = "";
         this.description = "";
-        this.unit = new Units();
-        this.offerShop = new ArrayList<>();
-        this.image = "";
+        this.rating = 0;
+        this.costList = new ArrayList<>();
+        this.imageList = new ArrayList<>();
     }
 
     public int getId() {
@@ -32,12 +34,20 @@ public class Product implements Parcelable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public CategoryProduct getCategoryProduct() {
+        return categoryProduct;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryProduct(CategoryProduct categoryProduct) {
+        this.categoryProduct = categoryProduct;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getDescription() {
@@ -48,28 +58,45 @@ public class Product implements Parcelable {
         this.description = description;
     }
 
-    public Units getUnit() {
-        return unit;
+    public int getRating() {
+        return rating;
     }
 
-    public void setUnit(Units unit) {
-        this.unit = unit;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
-    public ArrayList<OfferShop> getOfferShop() {
-        return offerShop;
+    public ArrayList<Cost> getCostList() {
+        return costList;
     }
 
-    public void setOfferShop(ArrayList<OfferShop> offerShop) {
-        this.offerShop = offerShop;
+    public Cost getFirstCost() {
+        if (costList.size() <= 0)
+            costList.add(new Cost());
+        return costList.get(0);
     }
 
-    public String getImage() {
-        return image;
+    public void setFirstCost(Cost cost) {
+        if (costList.size() <= 0)
+            costList.add(cost);
+        else
+            costList.set(0, cost);
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void addCost(Cost cost) {
+        costList.add(cost);
+    }
+
+    public void setCostList(ArrayList<Cost> costList) {
+        this.costList = costList;
+    }
+
+    public ArrayList<Image> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(ArrayList<Image> imageList) {
+        this.imageList = imageList;
     }
 
     @Override
@@ -79,12 +106,14 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeInt(this.getId());
-        dest.writeString(this.getName());
+        dest.writeParcelable(this.getCategoryProduct(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
+        dest.writeString(this.getBrand());
         dest.writeString(this.getDescription());
-        dest.writeParcelable(this.getUnit(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
-        dest.writeTypedList(this.getOfferShop());
-        dest.writeString(this.getImage());
+        dest.writeInt(this.getRating());
+        dest.writeTypedList(this.getCostList());
+        dest.writeTypedList(this.getImageList());
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -102,12 +131,15 @@ public class Product implements Parcelable {
 
     private Product(Parcel source) {
         this.setId(source.readInt());
-        this.setName(source.readString());
+        this.setCategoryProduct((CategoryProduct) source.readParcelable(CategoryProduct.class.getClassLoader()));
+        this.setBrand(source.readString());
         this.setDescription(source.readString());
-        this.setUnit((Units) source.readParcelable(Units.class.getClassLoader()));
-        ArrayList<OfferShop> listOffer = new ArrayList<>();
-        source.readTypedList(listOffer, OfferShop.CREATOR);
-        this.setOfferShop(listOffer);
-        this.setImage(source.readString());
+        this.setRating(source.readInt());
+        ArrayList<Cost> listOffer = new ArrayList<>();
+        source.readTypedList(listOffer, Cost.CREATOR);
+        setCostList(listOffer);
+        ArrayList<Image> listImage = new ArrayList<>();
+        source.readTypedList(listImage, Image.CREATOR);
+        setImageList(listImage);
     }
 }

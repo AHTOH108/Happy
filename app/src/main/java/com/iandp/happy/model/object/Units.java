@@ -3,42 +3,60 @@ package com.iandp.happy.model.object;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.iandp.happy.utils.Constants;
+
+import java.util.ArrayList;
+
 public class Units implements Parcelable {
 
-    private static final String LITER = "литр";
-    private static final String LITER_SHORT = "л.";
-    private static final String GRAM = "грамм";
-    private static final String GRAM_SHORT = "г.";
-
-    private int type;
+    private int id;
+    private String name;
+    private String shortName;
 
     public Units() {
-        type = -1;
+        id = -1;
+        name = "";
+        shortName = "";
     }
 
-    public int getType() {
-        return type;
+    public Units(int id, String name, String shortName) {
+        this.id = id;
+        this.name = name;
+        this.shortName = shortName;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public int getId() {
+        return id;
     }
 
-    public String getTypeString() {
-        switch (type){
-            case 1: return LITER;
-            case 2: return GRAM;
-            default: return "";
-        }
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getTypeStringShort() {
-        switch (type){
-            case 1: return LITER_SHORT;
-            case 2: return GRAM_SHORT;
-            default: return "";
-        }
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public ArrayList<Units> getListUnits() {
+        ArrayList<Units> listUnits = new ArrayList<>();
+        listUnits.add(new Units(Constants.UNUTS_ID_LITER, Constants.UNUTS_LITER, Constants.UNUTS_LITER_SHORT));
+        listUnits.add(new Units(Constants.UNUTS_ID_GRAM, Constants.UNUTS_GRAM, Constants.UNUTS_GRAM_SHORT));
+        listUnits.add(new Units(Constants.UNUTS_ID_VALUE, Constants.UNUTS_VALUE, Constants.UNUTS_VALUE_SHORT));
+        return listUnits;
+    }
+
 
     @Override
     public int describeContents() {
@@ -47,23 +65,27 @@ public class Units implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getType());
+        dest.writeInt(this.getId());
+        dest.writeString(this.getName());
+        dest.writeString(this.getShortName());
     }
 
-    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
+    public static final Parcelable.Creator<Units> CREATOR = new Parcelable.Creator<Units>() {
 
         @Override
-        public Product createFromParcel(Parcel source) {
-            return null;
+        public Units createFromParcel(Parcel source) {
+            return new Units(source);
         }
 
         @Override
-        public Product[] newArray(int size) {
-            return new Product[0];
+        public Units[] newArray(int size) {
+            return new Units[0];
         }
     };
 
     private Units(Parcel source) {
-        this.setType(source.readInt());
+        this.setId(source.readInt());
+        this.setName(source.readString());
+        this.setShortName(source.readString());
     }
 }
