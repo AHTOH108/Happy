@@ -2,10 +2,11 @@ package com.iandp.happy.fragment;
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,14 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.RedactProductCalculatorActivity;
+import com.iandp.happy.dialogs.RedactProductCalculatorDialog;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
@@ -28,7 +28,7 @@ import com.iandp.happy.model.object.Product;
 import java.util.ArrayList;
 
 
-public class CalculatorFragment extends Fragment {
+public class CalculatorFragment extends Fragment implements RedactProductCalculatorDialog.OnConfirmRedactProductListener {
 
     protected static final String REDACT_PRODUCT_CALCULATOR = "redactProductCalculator";
     protected static final String LIST_POSITION_REDACT = "listPositionRedact";
@@ -117,6 +117,11 @@ public class CalculatorFragment extends Fragment {
         }
         if (rVAdapter != null)
             rVAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onConfirmRedactProductListener(Product product) {
+
     }
 
 
@@ -253,11 +258,20 @@ public class CalculatorFragment extends Fragment {
     }
 
     private void goAddProduct() {
-        Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        RedactProductCalculatorDialog dialogFragment = RedactProductCalculatorDialog.newInstance(new Product(), getTag());
+        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
+
+        /*Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
         Product product = new Product();
         product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
         intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
-        startActivityForResult(intent, OK_ADD_PRODUCT_CALCULATOR);
+        startActivityForResult(intent, OK_ADD_PRODUCT_CALCULATOR);*/
 
     }
 

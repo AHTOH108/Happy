@@ -1,11 +1,11 @@
 package com.iandp.happy.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity {
 
     private void displayView(int position) {
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         Fragment fragmentCurrent = fragmentManager.findFragmentById(R.id.content_frame);
 

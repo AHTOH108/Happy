@@ -25,7 +25,7 @@ public class RedactProductCalculatorDialog extends AppCompatDialogFragment imple
     private static final String TAG_PARENT_FRAGMENT = "BirthdayDialogFragment";
 
     public interface OnConfirmRedactProductListener {
-        void onConfirmRedactPRoductListener(Product product);
+        void onConfirmRedactProductListener(Product product);
     }
 
     private OnConfirmRedactProductListener mOnConfirmListener;
