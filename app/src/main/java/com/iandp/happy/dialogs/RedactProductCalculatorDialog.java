@@ -84,6 +84,7 @@ public class RedactProductCalculatorDialog extends AppCompatDialogFragment imple
         switch (v.getId()) {
             case R.id.buttonApply:
                 this.dismiss();
+
                 break;
         }
     }
