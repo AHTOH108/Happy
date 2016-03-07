@@ -37,7 +37,7 @@ public class Units implements Parcelable {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -45,15 +45,15 @@ public class Units implements Parcelable {
         return shortName;
     }
 
-    public void setShortName(String shortName) {
+    private void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
     public ArrayList<Units> getListUnits() {
         ArrayList<Units> listUnits = new ArrayList<>();
-        listUnits.add(new Units(Constants.UNUTS_ID_LITER, Constants.UNUTS_LITER, Constants.UNUTS_LITER_SHORT));
-        listUnits.add(new Units(Constants.UNUTS_ID_GRAM, Constants.UNUTS_GRAM, Constants.UNUTS_GRAM_SHORT));
-        listUnits.add(new Units(Constants.UNUTS_ID_VALUE, Constants.UNUTS_VALUE, Constants.UNUTS_VALUE_SHORT));
+        listUnits.add(new Units(Constants.UNITS_ID_LITER, Constants.UNITS_LITER, Constants.UNITS_LITER_SHORT));
+        listUnits.add(new Units(Constants.UNITS_ID_GRAM, Constants.UNITS_GRAM, Constants.UNITS_GRAM_SHORT));
+        listUnits.add(new Units(Constants.UNITS_ID_VALUE, Constants.UNITS_VALUE, Constants.UNITS_VALUE_SHORT));
         return listUnits;
     }
 
