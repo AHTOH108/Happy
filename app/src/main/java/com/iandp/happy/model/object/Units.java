@@ -19,6 +19,10 @@ public class Units implements Parcelable {
         shortName = "";
     }
 
+    public Units(int id) {
+        setId(id);
+    }
+
     public Units(int id, String name, String shortName) {
         this.id = id;
         this.name = name;
@@ -31,6 +35,24 @@ public class Units implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+        switch (id) {
+            case Constants.UNITS_ID_LITER:
+                name = Constants.UNITS_LITER;
+                shortName = Constants.UNITS_LITER_SHORT;
+                break;
+            case Constants.UNITS_ID_GRAM:
+                name = Constants.UNITS_GRAM;
+                shortName = Constants.UNITS_GRAM_SHORT;
+                break;
+            case Constants.UNITS_ID_VALUE:
+                name = Constants.UNITS_VALUE;
+                shortName = Constants.UNITS_VALUE_SHORT;
+                break;
+            default:
+                name = "empty";
+                shortName = "empty";
+                break;
+        }
     }
 
     public String getName() {

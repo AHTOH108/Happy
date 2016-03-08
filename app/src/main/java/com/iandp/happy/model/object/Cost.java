@@ -11,6 +11,7 @@ public class Cost implements Parcelable {
     private int id;
     private long date;
     private double price;
+    private double priceMax;
     private double volume;
     private Units units;
     private double priceFromUnit;
@@ -21,6 +22,7 @@ public class Cost implements Parcelable {
         this.id = -1;
         this.date = 0;
         this.price = 0;
+        this.priceMax = 0;
         this.volume = 0;
         this.units = new Units();
         this.priceFromUnit = 0;
@@ -74,6 +76,14 @@ public class Cost implements Parcelable {
         this.price = price;
     }
 
+    public double getPriceMax() {
+        return priceMax;
+    }
+
+    public void setPriceMax(double priceMax) {
+        this.priceMax = priceMax;
+    }
+
     public double getVolume() {
         return volume;
     }
@@ -122,6 +132,7 @@ public class Cost implements Parcelable {
         dest.writeInt(this.getId());
         dest.writeLong(this.getDate());
         dest.writeDouble(this.getPrice());
+        dest.writeDouble(this.getPriceMax());
         dest.writeDouble(this.getVolume());
         dest.writeParcelable(this.getUnits(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
         dest.writeDouble(this.getPriceFromUnit());
@@ -145,6 +156,7 @@ public class Cost implements Parcelable {
         this.setId(source.readInt());
         this.setDate(source.readLong());
         this.setPrice(source.readDouble());
+        this.setPriceMax(source.readDouble());
         this.setVolume(source.readDouble());
         this.setUnits((Units) source.readParcelable(Units.class.getClassLoader()));
         this.setPriceFromUnit(source.readDouble());

@@ -9,13 +9,15 @@ import android.os.Parcelable;
 public class Shop implements Parcelable {
     private int id;
     private String name;
+    private Image image;
     private double latitude;
     private double longitude;
     private String address;
 
-    public Shop(int id, String name, double latitude, double longitude, String address) {
+    public Shop(int id, String name,Image image, double latitude, double longitude, String address) {
         this.id = id;
         this.name = name;
+        this.image = image;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
@@ -24,6 +26,7 @@ public class Shop implements Parcelable {
     public Shop() {
         this.id = -1;
         this.name = "";
+        this.image = new Image();
         this.latitude = 0;
         this.longitude = 0;
         this.address = "";
@@ -69,6 +72,14 @@ public class Shop implements Parcelable {
         this.address = address;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -78,6 +89,7 @@ public class Shop implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.getId());
         dest.writeString(this.getName());
+        dest.writeParcelable(this.getImage(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
         dest.writeDouble(this.getLatitude());
         dest.writeDouble(this.getLongitude());
         dest.writeString(this.getAddress());
@@ -99,6 +111,7 @@ public class Shop implements Parcelable {
     private Shop(Parcel source) {
         this.setId(source.readInt());
         this.setName(source.readString());
+        this.setImage((Image) source.readParcelable(Image.class.getClassLoader()));
         this.setLatitude(source.readDouble());
         this.setLongitude(source.readDouble());
         this.setAddress(source.readString());

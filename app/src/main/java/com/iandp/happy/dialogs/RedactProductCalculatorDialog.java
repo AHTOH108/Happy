@@ -74,6 +74,7 @@ public class RedactProductCalculatorDialog extends AppCompatDialogFragment imple
         view.findViewById(R.id.buttonApply).setOnClickListener(this);
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
                 .setTitle("setTitle");
+        adb.setView(view);
 
         return adb.create();
     }

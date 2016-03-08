@@ -2,8 +2,10 @@ package com.iandp.happy.fragment;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +23,9 @@ import android.widget.Toast;
 import com.iandp.happy.R;
 import com.iandp.happy.activity.RedactProductCalculatorActivity;
 import com.iandp.happy.dialogs.RedactProductCalculatorDialog;
+import com.iandp.happy.model.api.ProductApi;
+import com.iandp.happy.model.dataBase.DBHelper;
+import com.iandp.happy.model.dataBase.DBHelper_2;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
@@ -44,6 +49,10 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
 
     private ArrayList<Product> listProduct = new ArrayList<>();
 
+    private DBHelper dbHelper;
+
+    private DBHelper_2 dbHelper_2;
+
     private int listPositionRedact = -1;
 
     @Override
@@ -57,6 +66,8 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
 
+        dbHelper = new DBHelper(getContext());
+        dbHelper_2 = new DBHelper_2(getContext());
         setupView(view);
         loadInstanceState(savedInstanceState);
         return view;
@@ -90,7 +101,12 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
             if (requestCode == OK_ADD_PRODUCT_CALCULATOR) {
 
                 if (data != null) {
-                    listProduct.add((Product) data.getParcelableExtra(RedactProductCalculatorActivity.REDACT_PRODUCT));
+                    Product product = data.getParcelableExtra(RedactProductCalculatorActivity.REDACT_PRODUCT);
+                    product.getCategoryProduct().setName(product.getBrand());
+
+                    //long id = new ProductApi(getActivity()).addProduct(product);
+                    long id =  dbHelper.addNewProduct(product);
+                    listProduct.add(product);
                     rVAdapter.notifyDataSetChanged();
                 }
             }
@@ -114,6 +130,8 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
         } else {
             listPositionRedact = -1;
             listProduct = new ArrayList<>();
+            //listProduct = new ProductApi(getActivity()).getListProduct();
+            listProduct = dbHelper.getAllProduct();
         }
         if (rVAdapter != null)
             rVAdapter.notifyDataSetChanged();
@@ -267,12 +285,26 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
         RedactProductCalculatorDialog dialogFragment = RedactProductCalculatorDialog.newInstance(new Product(), getTag());
         dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
 
+
         /*Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
         Product product = new Product();
         product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
         intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
         startActivityForResult(intent, OK_ADD_PRODUCT_CALCULATOR);*/
 
+
+        /*ContentValues cv = new ContentValues();
+
+        SQLiteDatabase db = dbHelper_2.getWritableDatabase();
+        // получаем данные из полей ввода
+        String name = "Test 1";
+        String email = "Test_2";
+
+        cv.put("name", name);
+        cv.put("email", email);
+        // вставляем запись и получаем ее ID
+        long rowID = db.insert("mytable", null, cv);
+        dbHelper_2.close();*/
     }
 
     private void goRedactProduct(Product product, int position) {
