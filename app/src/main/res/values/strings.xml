@@ -20,7 +20,7 @@
         <item>title_calculator</item>
         <item>title_product</item>
         <item>title_shopping_list</item>
-        <item>title_shop</item>
+        <item>title_shops</item>
         <item>title_test</item>
         <item>title_about</item>
     </string-array>
@@ -28,7 +28,7 @@
     <string name="title_calculator">Калькулятор</string>
     <string name="title_product">Товары</string>
     <string name="title_shopping_list">Список покупок</string>
-    <string name="title_shop">Магазины</string>
+    <string name="title_shops">Магазины</string>
     <string name="title_test">Test</string>
     <string name="title_about">О приложении</string>
 
@@ -37,6 +37,7 @@
     <string name="volume">Объем</string>
     <string name="search">Поиск</string>
     <string name="price">Цена</string>
+    <string name="save">Сохранить</string>
 
 
     <string name="error">Неизвестная ошибка</string>
@@ -64,6 +65,15 @@
 
     <string name="from">От</string>
     <string name="before">до</string>
+
+    <!-- Shop -->
+    <string-array name="list_filter_shop">
+        <item>price</item>
+    </string-array>
+
+
+    <string name="title_shop">Магазин</string>
+
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,26 +1,221 @@
 package com.iandp.happy.fragment;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.iandp.happy.R;
+import com.iandp.happy.activity.RedactProductCalculatorActivity;
+import com.iandp.happy.activity.ShopDetailActivity;
+import com.iandp.happy.model.dataBase.DBHelper;
+import com.iandp.happy.model.object.CategoryProduct;
+import com.iandp.happy.model.object.Product;
+import com.iandp.happy.model.object.Shop;
+
+import java.util.ArrayList;
 
 
 public class ShopListFragment extends Fragment {
 
+    private static final int SHOW_DETAIL = 1;
+
+    private EditText mEditTextSearch;
+    private Spinner mSpinnerFilter;
+    private RecyclerView mRecyclerView;
+    private TextView mTextEmptyList;
+
+    private ArrayList<Shop> listShop = new ArrayList<>();
+    private RecyclerViewAdapter adapter;
+
+    private DBHelper dbHelper;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shop_list, container, false);
-
-
+        dbHelper = new DBHelper(getContext());
+        onCreateView(view);
+        loadInstanceState(savedInstanceState);
         return view;
+    }
+
+    private void onCreateView(View view) {
+        mEditTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
+        mSpinnerFilter = (Spinner) view.findViewById(R.id.spinnerFilter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mTextEmptyList = (TextView) view.findViewById(R.id.textEmptyList);
+
+        adapter = new RecyclerViewAdapter(getActivity(), new ArrayList<Shop>());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        checkListIsEmpty();
+    }
+
+    private void loadInstanceState(Bundle savedInstanceState){
+        listShop = dbHelper.getAllShop();
+        listShop.add(new Shop());
+        checkListIsEmpty();
+        adapter.updateListCar(listShop);
+    }
+
+    private void checkListIsEmpty() {
+        if (listShop == null || listShop.size() <= 0) {
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            mTextEmptyList.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mTextEmptyList.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void goRemoveShop(int id) {
+
+    }
+
+    private void goDetailShop(int id) {
+        Intent intent = new Intent(getActivity(), ShopDetailActivity.class);
+        intent.putExtra(ShopDetailActivity.DATA_ID_SHOP, id);
+        startActivityForResult(intent, SHOW_DETAIL);
+    }
+
+
+    /**
+     * *****************************************
+     * *****************Adapter*****************
+     * *****************************************
+     */
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
+        private static final int TYPE_ITEM = 1;
+        private static final int TYPE_PROGRESS_BAR = 2;
+
+        LayoutInflater lInflater;
+        private ArrayList<Shop> listShop = new ArrayList<>();
+
+
+        public RecyclerViewAdapter(Context context, ArrayList<Shop> listShop) {
+            lInflater = LayoutInflater.from(context);
+            this.listShop.addAll(listShop);
+        }
+
+        public void updateListCar(ArrayList<Shop> listShop) {
+            this.listShop.clear();
+            this.listShop.addAll(listShop);
+            notifyDataSetChanged();
+        }
+
+        public void removeItemList(int position) {
+            if (listShop.size() > position) {
+                this.listShop.remove(position);
+                notifyItemRemoved(position);
+            }
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+            switch (viewType) {
+                case TYPE_ITEM:
+                    return new ViewHolderShop(lInflater.inflate(R.layout.item_list_shop, viewGroup, false));
+                case TYPE_PROGRESS_BAR:
+                default:
+                    return new ViewHolder(lInflater.inflate(R.layout.item_spiner, viewGroup, false));
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+            int type = getItemViewType(position);
+
+            switch (type) {
+
+                case TYPE_ITEM:
+                    Shop item = getItem(position);
+                    ((ViewHolderShop) viewHolder).textViewName.setText(item.getName());
+                    ((ViewHolderShop) viewHolder).textViewAddress.setText(item.getAddress());
+                    ((ViewHolderShop) viewHolder).imageButtonRemove.setTag(item.getId());
+                    ((ViewHolderShop) viewHolder).imageButtonRemove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goRemoveShop((int) v.getTag());
+                        }
+                    });
+
+                    ((ViewHolderShop) viewHolder).view.setTag(item.getId());
+                    ((ViewHolderShop) viewHolder).view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goDetailShop((int) v.getTag());
+                        }
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (this.listShop.size() < 1) return 1;
+            else
+                return this.listShop.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (listShop.size() < 1) return TYPE_PROGRESS_BAR;
+            else if (listShop.size() > position)
+                return TYPE_ITEM;
+            else
+                return TYPE_PROGRESS_BAR;
+        }
+
+        public Shop getItem(int position) {
+            if (this.listShop.size() > position)
+                return this.listShop.get(position);
+            else
+                return new Shop();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            View view;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                view = itemView;
+            }
+        }
+
+        class ViewHolderShop extends ViewHolder {
+            public ImageView imageViewLogo;
+            public ImageButton imageButtonRemove;
+            public TextView textViewName;
+            public TextView textViewAddress;
+
+            public ViewHolderShop(View itemView) {
+                super(itemView);
+                imageViewLogo = (ImageView) view.findViewById(R.id.imageViewLogo);
+                imageButtonRemove = (ImageButton) view.findViewById(R.id.imageButtonRemove);
+                textViewName = (TextView) view.findViewById(R.id.textViewName);
+                textViewAddress = (TextView) view.findViewById(R.id.textViewAddress);
+            }
+        }
     }
 
 }

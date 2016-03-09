@@ -7,13 +7,18 @@
     <color name="window_background">@color/color_white</color>
     <color name="text_color_primary">#19201b</color>
 
-    <color name="color_white">#ffffffff</color>
-    <color name="color_black">#000000</color>
+    <color name="toolbar_background">#f1f1f1</color>
+
+
     <color name="color_black_alpha_24">#3c000000</color>
-    <color name="color_anthracite">#ff453f4d</color>
+    <color name="color_anthracite">#647c62</color>
     <color name="color_white_smoky">#ffededed</color>
 
     <color name="color_light_green">#1c8c29</color>
 
+    <color name="color_white">#ffffffff</color>
+    <color name="color_black">#000000</color>
+    <color name="color_hint">#7e7e7e</color>
+    <color name="color_gray_text">#737373</color>
 
 </resources>

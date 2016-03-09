@@ -372,6 +372,40 @@ public class DBHelper extends SQLiteOpenHelper {
         return shop;
     }
 
+    public ArrayList<Shop> getAllShop() {
+        ArrayList<Shop> listShop = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT  * FROM " + TABLE_SHOP;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null) {
+            int idColIndex = cursor.getColumnIndex(KEY_ID);
+            int nameColIndex = cursor.getColumnIndex(KEY_NAME);
+            int idLogoColIndex = cursor.getColumnIndex(KEY_ID_LOGO);
+            int latitudeColIndex = cursor.getColumnIndex(KEY_LATITUDE);
+            int longitudeColIndex = cursor.getColumnIndex(KEY_LONGITUDE);
+            int addressColIndex = cursor.getColumnIndex(KEY_ADDRESS);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Shop shop = new Shop();
+                    cursor.moveToFirst();
+                    shop.setId(cursor.getInt(idColIndex));
+                    shop.setName(cursor.getString(nameColIndex));
+                    int idLogo = cursor.getInt(idLogoColIndex);
+                    shop.setLatitude(cursor.getDouble(latitudeColIndex));
+                    shop.setLongitude(cursor.getDouble(longitudeColIndex));
+                    shop.setAddress(cursor.getString(addressColIndex));
+
+                    shop.setImage(getLogoShop(idLogo));
+                    listShop.add(shop);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        return listShop;
+    }
+
     public long addLogoShop(Image image) {
         String path = image.getPath();
         ContentValues cv = new ContentValues();
