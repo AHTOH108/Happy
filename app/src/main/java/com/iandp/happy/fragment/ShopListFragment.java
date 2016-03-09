@@ -1,6 +1,7 @@
 package com.iandp.happy.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.RedactProductCalculatorActivity;
@@ -34,7 +36,6 @@ public class ShopListFragment extends Fragment {
     private EditText mEditTextSearch;
     private Spinner mSpinnerFilter;
     private RecyclerView mRecyclerView;
-    private TextView mTextEmptyList;
 
     private ArrayList<Shop> listShop = new ArrayList<>();
     private RecyclerViewAdapter adapter;
@@ -52,11 +53,21 @@ public class ShopListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO: Потом удалить это т.к. не используем ( + Удалить активити которая отвечает за это)
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == SHOW_DETAIL) {
+                updateShopList();
+            }
+        }
+    }
+
     private void onCreateView(View view) {
         mEditTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
         mSpinnerFilter = (Spinner) view.findViewById(R.id.spinnerFilter);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mTextEmptyList = (TextView) view.findViewById(R.id.textEmptyList);
 
         adapter = new RecyclerViewAdapter(getActivity(), new ArrayList<Shop>());
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
@@ -66,21 +77,24 @@ public class ShopListFragment extends Fragment {
         checkListIsEmpty();
     }
 
-    private void loadInstanceState(Bundle savedInstanceState){
+    private void loadInstanceState(Bundle savedInstanceState) {
+        updateShopList();
+    }
+
+    private void updateShopList() {
         listShop = dbHelper.getAllShop();
-        listShop.add(new Shop());
         checkListIsEmpty();
         adapter.updateListCar(listShop);
     }
 
     private void checkListIsEmpty() {
-        if (listShop == null || listShop.size() <= 0) {
+        /*if (listShop == null || listShop.size() <= 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
             mTextEmptyList.setVisibility(View.VISIBLE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mTextEmptyList.setVisibility(View.INVISIBLE);
-        }
+        }*/
     }
 
     private void goRemoveShop(int id) {
@@ -102,6 +116,7 @@ public class ShopListFragment extends Fragment {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+        private static final int TYPE_ADD = 0;
         private static final int TYPE_ITEM = 1;
         private static final int TYPE_PROGRESS_BAR = 2;
 
@@ -130,6 +145,8 @@ public class ShopListFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             switch (viewType) {
+                case TYPE_ADD:
+                    return new ViewHolder(lInflater.inflate(R.layout.item_add_point, viewGroup, false));
                 case TYPE_ITEM:
                     return new ViewHolderShop(lInflater.inflate(R.layout.item_list_shop, viewGroup, false));
                 case TYPE_PROGRESS_BAR:
@@ -143,6 +160,18 @@ public class ShopListFragment extends Fragment {
             int type = getItemViewType(position);
 
             switch (type) {
+                case TYPE_ADD:
+                    TextView tv = (TextView) viewHolder.view.findViewById(R.id.textView);
+                    if (tv != null) {
+                        tv.setText(getString(R.string.add_shop));
+                        viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goDetailShop(-1);
+                            }
+                        });
+                    }
+                    break;
 
                 case TYPE_ITEM:
                     Shop item = getItem(position);
@@ -174,11 +203,13 @@ public class ShopListFragment extends Fragment {
         public int getItemCount() {
             if (this.listShop.size() < 1) return 1;
             else
-                return this.listShop.size();
+                return this.listShop.size() + 1;
         }
 
         @Override
         public int getItemViewType(int position) {
+            if (position == 0)
+                return TYPE_ADD;
             if (listShop.size() < 1) return TYPE_PROGRESS_BAR;
             else if (listShop.size() > position)
                 return TYPE_ITEM;
@@ -187,8 +218,9 @@ public class ShopListFragment extends Fragment {
         }
 
         public Shop getItem(int position) {
-            if (this.listShop.size() > position)
-                return this.listShop.get(position);
+            if (position == 0) return new Shop();
+            if (this.listShop.size() > position - 1)
+                return this.listShop.get(position - 1);
             else
                 return new Shop();
         }

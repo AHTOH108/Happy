@@ -321,26 +321,56 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public long addShop(Shop shop) {
+        if (shop.getId() < 0) {
+            String name = shop.getName();
+            double latitude = shop.getLatitude();
+            double longitude = shop.getLongitude();
+            String address = shop.getAddress();
+            int idLogo = shop.getImage().getId();
+            if (idLogo < 0)
+                idLogo = (int) addLogoShop(shop.getImage());
+
+            ContentValues cv = new ContentValues();
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            cv.put(KEY_NAME, name);
+            cv.put(KEY_ID_LOGO, idLogo);
+            cv.put(KEY_LATITUDE, latitude);
+            cv.put(KEY_LONGITUDE, longitude);
+            cv.put(KEY_ADDRESS, address);
+
+            long i = db.insert(TABLE_SHOP, null, cv);
+            this.close();
+            return i;
+        }else{
+            updateShop(shop);
+            return shop.getId();
+        }
+    }
+
+    public boolean updateShop(Shop shop) {
+        if (shop.getId() < 0) return false;
+
+        int id = shop.getId();
         String name = shop.getName();
+        int idLogo = shop.getImage().getId();
         double latitude = shop.getLatitude();
         double longitude = shop.getLongitude();
         String address = shop.getAddress();
-        int idLogo = shop.getImage().getId();
-        if (idLogo < 0)
-            idLogo = (int) addLogoShop(shop.getImage());
 
         ContentValues cv = new ContentValues();
         SQLiteDatabase db = this.getWritableDatabase();
-
+        cv.put(KEY_ID, id);
         cv.put(KEY_NAME, name);
         cv.put(KEY_ID_LOGO, idLogo);
         cv.put(KEY_LATITUDE, latitude);
         cv.put(KEY_LONGITUDE, longitude);
         cv.put(KEY_ADDRESS, address);
-
-        long i = db.insert(TABLE_SHOP, null, cv);
+        // обновляем по id
+        int updCount = db.update(TABLE_SHOP, cv, KEY_ID + " = ?",
+                new String[]{String.valueOf(id)});
         this.close();
-        return i;
+        return updCount > 0;
     }
 
     public Shop getShop(int id) {
@@ -399,7 +429,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
                     shop.setImage(getLogoShop(idLogo));
                     listShop.add(shop);
-                } while (cursor.moveToNext());
+                    //TODO: тут не работает! не переключает на следующую запись!
+                } while (cursor.moveToNext() && listShop.size() < 100);
             }
             cursor.close();
         }
