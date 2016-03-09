@@ -2,10 +2,8 @@ package com.iandp.happy.fragment;
 
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,10 +20,8 @@ import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.RedactProductCalculatorActivity;
-import com.iandp.happy.dialogs.RedactProductCalculatorDialog;
-import com.iandp.happy.model.api.ProductApi;
+import com.iandp.happy.dialogs.EditProductCalculatorDialog;
 import com.iandp.happy.model.dataBase.DBHelper;
-import com.iandp.happy.model.dataBase.DBHelper_2;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
@@ -33,7 +29,7 @@ import com.iandp.happy.model.object.Product;
 import java.util.ArrayList;
 
 
-public class CalculatorFragment extends Fragment implements RedactProductCalculatorDialog.OnConfirmRedactProductListener {
+public class CalculatorFragment extends Fragment implements EditProductCalculatorDialog.OnConfirmEditProductListener {
 
     protected static final String REDACT_PRODUCT_CALCULATOR = "redactProductCalculator";
     protected static final String LIST_POSITION_REDACT = "listPositionRedact";
@@ -51,8 +47,6 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
 
     private DBHelper dbHelper;
 
-    private DBHelper_2 dbHelper_2;
-
     private int listPositionRedact = -1;
 
     @Override
@@ -67,7 +61,6 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
 
         dbHelper = new DBHelper(getContext());
-        dbHelper_2 = new DBHelper_2(getContext());
         setupView(view);
         loadInstanceState(savedInstanceState);
         return view;
@@ -82,6 +75,7 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO: Потом удалить это т.к. не используем ( + Удалить активити которая отвечает за это)
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == OK_REDACT_PRODUCT_CALCULATOR) {
@@ -105,7 +99,7 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
                     product.getCategoryProduct().setName(product.getBrand());
 
                     //long id = new ProductApi(getActivity()).addProduct(product);
-                    long id =  dbHelper.addNewProduct(product);
+                    //long id = dbHelper.addNewProduct(product);
                     listProduct.add(product);
                     rVAdapter.notifyDataSetChanged();
                 }
@@ -130,16 +124,31 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
         } else {
             listPositionRedact = -1;
             listProduct = new ArrayList<>();
-            //listProduct = new ProductApi(getActivity()).getListProduct();
-            listProduct = dbHelper.getAllProduct();
+
+            //listProduct = dbHelper.getAllProduct();
         }
         if (rVAdapter != null)
             rVAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onConfirmRedactProductListener(Product product) {
-
+    public void onConfirmEditProductListener(Product product) {
+        if (product == null) return;
+        if (product.getId() >= 0) {
+            if (listPositionRedact >= 0 && listProduct.size() > listPositionRedact) {
+                listProduct.set(listPositionRedact, product);
+                rVAdapter.notifyDataSetChanged();
+                listPositionRedact = -1;
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            product.getCategoryProduct().setName(product.getBrand());
+            //long id = dbHelper.addNewProduct(product);
+            product.setId(listProduct.size() + 1);
+            listProduct.add(product);
+            rVAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -276,13 +285,15 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
     }
 
     private void goAddProduct() {
+        Product product = new Product();
+        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
         if (prevDialog != null) {
             ft.remove(prevDialog);
         }
 
-        RedactProductCalculatorDialog dialogFragment = RedactProductCalculatorDialog.newInstance(new Product(), getTag());
+        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
         dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
 
 
@@ -309,10 +320,18 @@ public class CalculatorFragment extends Fragment implements RedactProductCalcula
 
     private void goRedactProduct(Product product, int position) {
         listPositionRedact = position;
-        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
-        Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
+        /*Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
         intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
-        startActivityForResult(intent, OK_REDACT_PRODUCT_CALCULATOR);
+        startActivityForResult(intent, OK_REDACT_PRODUCT_CALCULATOR);*/
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
+        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
 
     }
 

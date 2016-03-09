@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">@color/color_white</color>
-    <color name="color_primary_dark">@color/color_white</color>
+    <color name="color_primary">#089402</color>
+    <color name="color_primary_dark">#20701c</color>
     <color name="color_accent">@color/color_light_green</color>
-    <color name="navigation_bar_color">@color/color_black_alpha_24</color>
+    <color name="navigation_bar_color">#353535</color>
     <color name="window_background">@color/color_white</color>
-    <color name="text_color_primary">@color/color_anthracite</color>
-
-    <color name="color_background_app">#cec226d7</color>
+    <color name="text_color_primary">#19201b</color>
 
     <color name="color_white">#ffffffff</color>
+    <color name="color_black">#000000</color>
     <color name="color_black_alpha_24">#3c000000</color>
     <color name="color_anthracite">#ff453f4d</color>
     <color name="color_white_smoky">#ffededed</color>
