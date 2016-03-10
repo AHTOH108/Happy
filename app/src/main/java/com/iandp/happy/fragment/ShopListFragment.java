@@ -55,7 +55,6 @@ public class ShopListFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO: Потом удалить это т.к. не используем ( + Удалить активити которая отвечает за это)
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == SHOW_DETAIL) {
@@ -74,7 +73,6 @@ public class ShopListFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        checkListIsEmpty();
     }
 
     private void loadInstanceState(Bundle savedInstanceState) {
@@ -83,22 +81,13 @@ public class ShopListFragment extends Fragment {
 
     private void updateShopList() {
         listShop = dbHelper.getAllShop();
-        checkListIsEmpty();
         adapter.updateListCar(listShop);
     }
 
-    private void checkListIsEmpty() {
-        /*if (listShop == null || listShop.size() <= 0) {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            mTextEmptyList.setVisibility(View.VISIBLE);
-        } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mTextEmptyList.setVisibility(View.INVISIBLE);
-        }*/
-    }
-
     private void goRemoveShop(int id) {
-
+        if (dbHelper.removeShop(id) > 0) {
+            updateShopList();
+        }
     }
 
     private void goDetailShop(int id) {
@@ -211,7 +200,7 @@ public class ShopListFragment extends Fragment {
             if (position == 0)
                 return TYPE_ADD;
             if (listShop.size() < 1) return TYPE_PROGRESS_BAR;
-            else if (listShop.size() > position)
+            else if (listShop.size() > position - 1)
                 return TYPE_ITEM;
             else
                 return TYPE_PROGRESS_BAR;

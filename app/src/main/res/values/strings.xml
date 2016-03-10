@@ -66,9 +66,12 @@
     <string name="from">От</string>
     <string name="before">до</string>
 
+    <string name="all_category">Все категории</string>
+    <string name="add_product">Добавить товар</string>
+
     <!-- Shop -->
     <string-array name="list_filter_shop">
-        <item>price</item>
+        <item>Без сортировки</item>
     </string-array>
 
 

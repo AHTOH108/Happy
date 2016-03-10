@@ -73,10 +73,19 @@ public class ShopDetailActivity extends AppCompatActivity {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mToolbar.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                super.onBackPressed();
+                finishActivity(false);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void finishActivity(boolean isOk){
+        if (isOk){
+            setResult(RESULT_OK);
+            finish();
+        }else{
+            super.onBackPressed();
+        }
     }
 }

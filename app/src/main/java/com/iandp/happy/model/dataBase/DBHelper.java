@@ -118,13 +118,13 @@ public class DBHelper extends SQLiteOpenHelper {
             long i = db.insert(TABLE_PRODUCT, null, cv);
             this.close();
             return i;
-        }else{
+        } else {
             //TODO: Add UPDATE !!!!
             return -1;
         }
     }
 
-        //TODO: ADD PAGE_LIMIT !!
+    //TODO: ADD PAGE_LIMIT !!
     public ArrayList<Product> getAllProduct() {
         ArrayList<Product> listProduct = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
             long i = db.insert(TABLE_CATEGORY_PRODUCT, null, cv);
             this.close();
             return i;
-        }else{
+        } else {
             //TODO: Add UPDATE !!!!
             return -1;
         }
@@ -230,7 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
             long i = db.insert(TABLE_COST, null, cv);
             this.close();
             return i;
-        }else{
+        } else {
             //TODO: Add UPDATE!!!!
             return -1;
         }
@@ -286,7 +286,7 @@ public class DBHelper extends SQLiteOpenHelper {
             long i = db.insert(TABLE_IMAGE, null, cv);
             this.close();
             return i;
-        }else{
+        } else {
             //TODO: Add UPDATE Image !!!!
             return -1;
         }
@@ -342,7 +342,7 @@ public class DBHelper extends SQLiteOpenHelper {
             long i = db.insert(TABLE_SHOP, null, cv);
             this.close();
             return i;
-        }else{
+        } else {
             updateShop(shop);
             return shop.getId();
         }
@@ -405,21 +405,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Shop> getAllShop() {
         ArrayList<Shop> listShop = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT  * FROM " + TABLE_SHOP;
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        //String selectQuery = "SELECT  * FROM " + TABLE_SHOP;
+        Cursor cursor = db.query(TABLE_SHOP, null, null, null, null, null, null);
 
         if (cursor != null) {
-            int idColIndex = cursor.getColumnIndex(KEY_ID);
-            int nameColIndex = cursor.getColumnIndex(KEY_NAME);
-            int idLogoColIndex = cursor.getColumnIndex(KEY_ID_LOGO);
-            int latitudeColIndex = cursor.getColumnIndex(KEY_LATITUDE);
-            int longitudeColIndex = cursor.getColumnIndex(KEY_LONGITUDE);
-            int addressColIndex = cursor.getColumnIndex(KEY_ADDRESS);
-
             if (cursor.moveToFirst()) {
+                int idColIndex = cursor.getColumnIndex(KEY_ID);
+                int nameColIndex = cursor.getColumnIndex(KEY_NAME);
+                int idLogoColIndex = cursor.getColumnIndex(KEY_ID_LOGO);
+                int latitudeColIndex = cursor.getColumnIndex(KEY_LATITUDE);
+                int longitudeColIndex = cursor.getColumnIndex(KEY_LONGITUDE);
+                int addressColIndex = cursor.getColumnIndex(KEY_ADDRESS);
                 do {
                     Shop shop = new Shop();
-                    cursor.moveToFirst();
                     shop.setId(cursor.getInt(idColIndex));
                     shop.setName(cursor.getString(nameColIndex));
                     int idLogo = cursor.getInt(idLogoColIndex);
@@ -429,12 +427,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
                     shop.setImage(getLogoShop(idLogo));
                     listShop.add(shop);
-                    //TODO: тут не работает! не переключает на следующую запись!
-                } while (cursor.moveToNext() && listShop.size() < 100);
+                } while (cursor.moveToNext());
             }
             cursor.close();
         }
         return listShop;
+    }
+
+    public int removeShop(int idShop) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int delCount = db.delete(TABLE_SHOP, KEY_ID + " = " + idShop, null);
+        db.close();
+        return delCount;
     }
 
     public long addLogoShop(Image image) {

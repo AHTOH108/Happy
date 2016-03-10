@@ -1,8 +1,6 @@
 package com.iandp.happy.fragment;
 
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -15,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
+import com.iandp.happy.activity.ShopDetailActivity;
 import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.Shop;
 
@@ -83,11 +82,6 @@ public class DetailShopFragment extends Fragment {
         }
     }
 
-    public void finishFragment(boolean isOk) {
-        if (isOk)
-            getActivity().finish();
-    }
-
     public void goSaveInfoShop() {
         if (mShop == null) return;
         String name = mEditTextName.getText().toString();
@@ -96,7 +90,10 @@ public class DetailShopFragment extends Fragment {
             mShop.setName(name);
             dbHelper.addShop(mShop);
             Toast.makeText(getActivity(), "Save successful!", Toast.LENGTH_SHORT).show();
-            finishFragment(true);
+
+            if (ShopDetailActivity.class.isInstance(getActivity())) {
+                ((ShopDetailActivity) getActivity()).finishActivity(true);
+            }
         } else {
             // TODO: доработать обработку ошибок и поведение приложения при этом
             mEditTextName.requestFocus();

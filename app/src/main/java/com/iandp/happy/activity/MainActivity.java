@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.iandp.happy.R;
 import com.iandp.happy.fragment.CalculatorFragment;
 import com.iandp.happy.fragment.ShopListFragment;
-import com.iandp.happy.temp.ListProductFragment;
+import com.iandp.happy.temp.ProductListFragment;
 import com.iandp.happy.temp.NavMenuItem;
 import com.iandp.happy.temp.TestFragment;
 
@@ -173,7 +173,7 @@ public class MainActivity extends BaseActivity {
                 fragmentNew = new CalculatorFragment();
                 break;
             case NAV_MENU_POSITION_PRODUCT:
-                fragmentNew = new ListProductFragment();
+                fragmentNew = new ProductListFragment();
                 break;
             case NAV_MENU_POSITION_SHOPPING_LIST:
                 fragmentNew = new TestFragment();
