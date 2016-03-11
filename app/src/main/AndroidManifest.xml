@@ -26,13 +26,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
-        <activity android:name=".activity.RedactProductCalculatorActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.ShopDetailActivity"
+        <activity
+            android:name=".activity.RedactProductCalculatorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ShopDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.ProductDetailActivity"></activity>
     </application>
 
 </manifest>

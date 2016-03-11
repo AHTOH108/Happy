@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.iandp.happy.R;
 import com.iandp.happy.fragment.CalculatorFragment;
 import com.iandp.happy.fragment.ShopListFragment;
-import com.iandp.happy.temp.ProductListFragment;
+import com.iandp.happy.fragment.ProductListFragment;
 import com.iandp.happy.temp.NavMenuItem;
 import com.iandp.happy.temp.TestFragment;
 

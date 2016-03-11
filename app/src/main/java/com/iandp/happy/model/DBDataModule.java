@@ -1,15 +1,8 @@
 package com.iandp.happy.model;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.iandp.happy.model.dataBase.DBHelper;
-import com.iandp.happy.model.object.CategoryProduct;
-import com.iandp.happy.utils.Constants;
-
-import java.util.ArrayList;
 
 /**
  * Created on 19.01.2016.
@@ -40,7 +33,7 @@ public class DBDataModule {
         return sDBDataModule;
     }
 
-    public DBHelper getDbHelper(){
+    public DBHelper getDbHelper() {
         return dbHelper;
     }
 }

@@ -1,4 +1,4 @@
-package com.iandp.happy.temp;
+package com.iandp.happy.fragment;
 
 
 import android.content.Context;
@@ -10,12 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.model.dataBase.DBHelper;
+import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 
 import java.util.ArrayList;
@@ -76,6 +79,13 @@ public class ProductListFragment extends Fragment {
         }
     }
 
+    private void goRemoveProduct(int idProduct) {
+
+    }
+
+    private void goDetailProduct(int idProduct) {
+
+    }
 
     /**
      * *****************************************
@@ -136,7 +146,7 @@ public class ProductListFragment extends Fragment {
                         viewHolder.view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //goDetailShop(-1);
+                                goDetailProduct(-1);
                             }
                         });
                     }
@@ -144,7 +154,47 @@ public class ProductListFragment extends Fragment {
 
                 case TYPE_ITEM:
                     Product item = getItem(position);
+                    viewHolder.view.setTag(item.getId());
+                    viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goDetailProduct((int) v.getTag());
+                        }
+                    });
 
+                    ((ViewHolderProduct) viewHolder).imageButtonRemove.setTag(item.getId());
+                    ((ViewHolderProduct) viewHolder).imageButtonRemove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goRemoveProduct((int) v.getTag());
+                        }
+                    });
+
+                    //TODO: установить первое изображение у товара если оно есть
+                    //((ViewHolderProduct) viewHolder).imageViewProduct;
+
+                    ((ViewHolderProduct) viewHolder).textViewCategory.setText(item.getCategoryProduct().getName());
+                    ((ViewHolderProduct) viewHolder).textViewNameProduct.setText(item.getBrand());
+                    ((ViewHolderProduct) viewHolder).textViewDescription.setText(item.getDescription());
+                    Cost cost = item.getFirstCost();
+                    if (cost != null) {
+                        if (cost.getShop() != null && cost.getShop().getImage() != null && cost.getShop().getImage().getPath().length() > 0) {
+                            ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.VISIBLE);
+                            //TODO: сделать загрузку логотипа
+                            ((ViewHolderProduct) viewHolder).textViewNameShop.setVisibility(View.GONE);
+                        } else {
+                            ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.GONE);
+                            ((ViewHolderProduct) viewHolder).textViewNameShop.setVisibility(View.VISIBLE);
+                            ((ViewHolderProduct) viewHolder).textViewNameShop.setText(cost.getShop().getName());
+                        }
+                        ((ViewHolderProduct) viewHolder).textViewPrice.setText(String.valueOf(cost.getPrice()));
+                        ((ViewHolderProduct) viewHolder).textViewUnits.setText(cost.getUnits().getName());
+                    } else {
+                        ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.GONE);
+                        ((ViewHolderProduct) viewHolder).textViewNameShop.setVisibility(View.INVISIBLE);
+                        ((ViewHolderProduct) viewHolder).textViewPrice.setText("");
+                        ((ViewHolderProduct) viewHolder).textViewUnits.setText("");
+                    }
                     break;
 
                 default:
@@ -188,14 +238,28 @@ public class ProductListFragment extends Fragment {
         }
 
         class ViewHolderProduct extends ViewHolder {
-            //public ImageView imageViewLog;
+            public ImageButton imageButtonRemove;
+            public ImageView imageViewProduct;
+            public ImageView imageViewLogoShop;
+            public TextView textViewCategory;
+            public TextView textViewNameProduct;
+            public TextView textViewDescription;
+            public TextView textViewPrice;
+            public TextView textViewUnits;
+            public TextView textViewNameShop;
 
             public ViewHolderProduct(View itemView) {
                 super(itemView);
-                //imageViewLogo = (ImageView) view.findViewById(R.id.imageViewLogo);
+                imageButtonRemove = (ImageButton) view.findViewById(R.id.imageButtonRemove);
+                imageViewProduct = (ImageView) view.findViewById(R.id.imageViewProduct);
+                imageViewLogoShop = (ImageView) view.findViewById(R.id.imageViewLogoShop);
+                textViewCategory = (TextView) view.findViewById(R.id.textViewCategory);
+                textViewNameProduct = (TextView) view.findViewById(R.id.textViewNameProduct);
+                textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
+                textViewPrice = (TextView) view.findViewById(R.id.textViewPrice);
+                textViewUnits = (TextView) view.findViewById(R.id.textViewUnits);
+                textViewNameShop = (TextView) view.findViewById(R.id.textViewNameShop);
             }
         }
     }
-
-
 }
