@@ -154,6 +154,34 @@ public class DBHelper extends SQLiteOpenHelper {
         return listProduct;
     }
 
+    public Product getProduct(int id) {
+        if (id < 0) return new Product();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_PRODUCT, new String[]{KEY_ID, KEY_ID_CATEGORY, KEY_BRAND, KEY_DESCRIPTION, KEY_RATING},
+                KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+
+        Product product = new Product();
+        if (cursor != null) {
+            int idColIndex = cursor.getColumnIndex(KEY_ID);
+            int idCategoryColIndex = cursor.getColumnIndex(KEY_ID_CATEGORY);
+            int brandColIndex = cursor.getColumnIndex(KEY_BRAND);
+            int descriptionColIndex = cursor.getColumnIndex(KEY_DESCRIPTION);
+            int ratingColIndex = cursor.getColumnIndex(KEY_RATING);
+
+            cursor.moveToFirst();
+            product.setId(cursor.getInt(idColIndex));
+            product.setCategoryProduct(getCategoryProduct(cursor.getInt(idCategoryColIndex)));
+            product.setBrand(cursor.getString(brandColIndex));
+            product.setDescription(cursor.getString(descriptionColIndex));
+            product.setRating(cursor.getInt(ratingColIndex));
+            cursor.close();
+        }
+
+        this.close();
+        return product;
+    }
+
     public long addCategoryProduct(CategoryProduct categoryProduct) {
         if (categoryProduct.getId() < 0) {
             ContentValues cv = new ContentValues();

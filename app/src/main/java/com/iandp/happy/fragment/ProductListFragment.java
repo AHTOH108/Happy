@@ -2,6 +2,7 @@ package com.iandp.happy.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
+import com.iandp.happy.activity.ProductDetailActivity;
+import com.iandp.happy.activity.ShopDetailActivity;
 import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 
 
 public class ProductListFragment extends Fragment {
+
+    private static final int SHOW_DETAIL = 1;
 
     private RelativeLayout mRelativeLayoutCategory;
     private TextView mTextViewCategory;
@@ -73,6 +78,8 @@ public class ProductListFragment extends Fragment {
     private void updateProductList() {
         if (dbHelper != null) {
             mListProduct = dbHelper.getAllProduct();
+            for (int i = 0; i < 10; i++)
+                mListProduct.add(new Product());
             if (adapter != null) {
                 adapter.updateListCar(mListProduct);
             }
@@ -84,7 +91,9 @@ public class ProductListFragment extends Fragment {
     }
 
     private void goDetailProduct(int idProduct) {
-
+        Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+        intent.putExtra(ProductDetailActivity.DATA_ID_PRODUCT, idProduct);
+        startActivityForResult(intent, SHOW_DETAIL);
     }
 
     /**

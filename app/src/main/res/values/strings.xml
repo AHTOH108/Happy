@@ -68,6 +68,8 @@
 
     <string name="all_category">Все категории</string>
     <string name="add_product">Добавить товар</string>
+    <string name="add_cost">Добавить цену</string>
+    <string name="update_cost">Обновить</string>
 
     <!-- Shop -->
     <string-array name="list_filter_shop">

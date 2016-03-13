@@ -21,4 +21,6 @@
     <color name="color_hint">#7e7e7e</color>
     <color name="color_gray_text">#737373</color>
 
+    <color name="background_detail_product">#d3ffd2</color>
+
 </resources>

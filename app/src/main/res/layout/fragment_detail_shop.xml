@@ -7,7 +7,6 @@
     tools:context="com.iandp.happy.fragment.DetailShopFragment">
 
 
-
         <EditText
             android:id="@+id/editTextName"
             android:layout_width="match_parent"

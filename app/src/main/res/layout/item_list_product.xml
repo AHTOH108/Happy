@@ -87,8 +87,8 @@
                     android:textColor="@color/color_gray_text" />
             </LinearLayout>
         </LinearLayout>
-
-        <include layout="@layout/view_line" />
+<!--
+        <include layout="@layout/view_line" />-->
 
         <RelativeLayout
             android:layout_width="match_parent"
