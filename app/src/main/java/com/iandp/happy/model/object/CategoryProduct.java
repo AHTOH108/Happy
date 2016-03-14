@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 public class CategoryProduct implements Parcelable {
 
-    private int id;
+    private long id;
     private String name;
 
     public CategoryProduct() {
@@ -26,11 +26,11 @@ public class CategoryProduct implements Parcelable {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -49,7 +49,7 @@ public class CategoryProduct implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeString(this.getName());
     }
 
@@ -67,7 +67,7 @@ public class CategoryProduct implements Parcelable {
     };
 
     private CategoryProduct(Parcel source) {
-        this.setId(source.readInt());
+        this.setId(source.readLong());
         this.setName(source.readString());
     }
 }

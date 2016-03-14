@@ -180,7 +180,7 @@ public class ProductListFragment extends Fragment {
                     });
 
                     //TODO: установить первое изображение у товара если оно есть
-                    //((ViewHolderProduct) viewHolder).imageViewProduct;
+                    //((ViewHolderProduct_) viewHolder).imageViewProduct;
 
                     ((ViewHolderProduct) viewHolder).textViewCategory.setText(item.getCategoryProduct().getName());
                     ((ViewHolderProduct) viewHolder).textViewNameProduct.setText(item.getBrand());

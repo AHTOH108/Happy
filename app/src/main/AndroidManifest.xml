@@ -33,9 +33,11 @@
             android:name=".activity.ShopDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".activity.ProductDetailActivity"
+        <activity
+            android:name=".activity.ProductDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.CategoryListActivity"></activity>
     </application>
 
 </manifest>

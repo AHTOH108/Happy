@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +22,10 @@ import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.ProductDetailActivity;
+import com.iandp.happy.adapters.SpinnerAdapter;
+import com.iandp.happy.dialogs.EditCategoryDialog;
 import com.iandp.happy.model.dataBase.DBHelper;
+import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 
@@ -30,9 +34,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailProductFragment extends Fragment implements View.OnClickListener {
+public class DetailProductFragment extends Fragment implements View.OnClickListener,
+        EditCategoryDialog.OnConfirmEditCategoryListener {
 
     private static final String ARG_ID_PRODUCT = "idProduct";
+
+    private static final String ADD_CATEGORY = "addCategory";
 
     //private Toolbar mToolbar;
     private Spinner mSpinnerCategory;
@@ -43,9 +50,13 @@ public class DetailProductFragment extends Fragment implements View.OnClickListe
 
     private RecyclerViewAdapter mAdapter;
 
+    SpinnerAdapter adapterCategory;
     private DBHelper dbHelper;
     private ArrayList<Cost> mListCost;
+    private ArrayList<CategoryProduct> mListCategory;
     private Product mProduct;
+
+    String[] nullListSpinner = new String[]{"Категорий нет"};
 
     public static DetailProductFragment newInstance(int id) {
         Bundle args = new Bundle();
@@ -104,11 +115,49 @@ public class DetailProductFragment extends Fragment implements View.OnClickListe
         buttonAddCategory.setOnClickListener(this);
         imageButtonAddPhoto.setOnClickListener(this);
         buttonEditDescription.setOnClickListener(this);
+
+        setupCategorySpinner(mListCategory = new ArrayList<>());
+    }
+
+    private void setupCategorySpinner(ArrayList<CategoryProduct> listCategory) {
+
+        adapterCategory = new SpinnerAdapter(getActivity(), R.layout.item_simple_spinner, nullListSpinner);
+        adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerCategory.setAdapter(adapterCategory);
+        //mSpinnerCategory.setOnItemSelectedListener(onItemSelectedListener);
+
+        updateCategorySpinner(listCategory);
+    }
+
+    private void updateCategorySpinner(ArrayList<CategoryProduct> listCategory) {
+        if (mSpinnerCategory == null || adapterCategory == null) return;
+        String mass[];
+        if (listCategory != null && listCategory.size() > 0) {
+            mass = new String[listCategory.size()];
+            for (int i = 0; i < listCategory.size(); i++)
+                mass[i] = listCategory.get(i).getName();
+            if (mass.length > 0) {
+                adapterCategory.updateList(mass);
+            }
+        } else {
+            adapterCategory.updateList(nullListSpinner);
+        }
+    }
+
+    private void selectCategory(long idCategory) {
+        if (mSpinnerCategory == null || adapterCategory == null || mListCategory == null) return;
+        for (int i = 0; i < mListCategory.size(); i++)
+            if (mListCategory.get(i).getId() == idCategory) {
+                if (mSpinnerCategory.getCount() > i) {
+                    mSpinnerCategory.setSelection(i);
+                }
+            }
     }
 
     private void loadInstanceState(Bundle savedInstanceState) {
         dbHelper = new DBHelper(getActivity());
         updateCostList();
+        updateCategoryList();
     }
 
     private void setToolbar(View view) {
@@ -132,25 +181,47 @@ public class DetailProductFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    private void updateCategoryList() {
+        if (dbHelper != null) {
+            mListCategory = dbHelper.getAllCategoryProduct();
+            updateCategorySpinner(mListCategory);
+        }
+    }
+
     private void goAddNewCategory() {
-        Toast.makeText(getActivity(),"goAddNewCategory", Toast.LENGTH_SHORT).show();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(ADD_CATEGORY);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        EditCategoryDialog dialogFragment = EditCategoryDialog.newInstance(null, getTag());
+        dialogFragment.show(ft, ADD_CATEGORY);
     }
 
     private void goAddNewPhoto() {
-        Toast.makeText(getActivity(),"goAddNewPhoto", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "goAddNewPhoto", Toast.LENGTH_SHORT).show();
 
     }
 
     private void goAddNewDescription() {
-        Toast.makeText(getActivity(),"goAddNewDescription", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "goAddNewDescription", Toast.LENGTH_SHORT).show();
     }
 
     private void goAddNewCost() {
-        Toast.makeText(getActivity(),"goAddNewCost", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "goAddNewCost", Toast.LENGTH_SHORT).show();
     }
 
     private void goUpdateCost(int idCost) {
-        Toast.makeText(getActivity(),"goUpdateCost", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "goUpdateCost", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConfirmEditCategoryListener(CategoryProduct categoryProduct) {
+        long id = dbHelper.addCategoryProduct(categoryProduct);
+        updateCategoryList();
+        if (id > 0)
+            selectCategory(id);
     }
 
 
