@@ -1,6 +1,7 @@
 package com.iandp.happy.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,7 +40,7 @@ public abstract class BaseActivityWithFragment extends AppCompatActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(mToolbar.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
-                finishActivity(false);
+                finishActivity(false, null);
                 return true;
         }
 
@@ -68,9 +69,12 @@ public abstract class BaseActivityWithFragment extends AppCompatActivity {
         }
     }
 
-    public void finishActivity(boolean isOk) {
+    public void finishActivity(boolean isOk, Intent intent) {
         if (isOk) {
-            setResult(RESULT_OK);
+            if (intent == null)
+                setResult(RESULT_OK);
+            else
+                setResult(RESULT_OK, intent);
             finish();
         } else {
             super.onBackPressed();

@@ -24,6 +24,7 @@ import com.iandp.happy.R;
 import com.iandp.happy.activity.ProductDetailActivity;
 import com.iandp.happy.adapters.SpinnerAdapter;
 import com.iandp.happy.dialogs.EditCategoryDialog;
+import com.iandp.happy.dialogs.EditTextDialog;
 import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
@@ -35,11 +36,13 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class DetailProductFragment extends Fragment implements View.OnClickListener,
-        EditCategoryDialog.OnConfirmEditCategoryListener {
+        EditCategoryDialog.OnConfirmEditCategoryListener,
+        EditTextDialog.OnConfirmEditListener {
 
     private static final String ARG_ID_PRODUCT = "idProduct";
 
     private static final String ADD_CATEGORY = "addCategory";
+    private static final String ADD_DESCRIPTION = "addDescription";
 
     //private Toolbar mToolbar;
     private Spinner mSpinnerCategory;
@@ -205,7 +208,15 @@ public class DetailProductFragment extends Fragment implements View.OnClickListe
     }
 
     private void goAddNewDescription() {
-        Toast.makeText(getActivity(), "goAddNewDescription", Toast.LENGTH_SHORT).show();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(ADD_DESCRIPTION);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        EditTextDialog dialogFragment = EditTextDialog.newInstance("", getTag());
+        dialogFragment.show(ft, ADD_DESCRIPTION);
+
     }
 
     private void goAddNewCost() {
@@ -222,6 +233,14 @@ public class DetailProductFragment extends Fragment implements View.OnClickListe
         updateCategoryList();
         if (id > 0)
             selectCategory(id);
+    }
+
+    @Override
+    public void onConfirmEditListener(String string) {
+        if (mTextViewDescription != null){
+            mTextViewDescription.setText(string);
+            //TODO: доделать тут!!!!!
+        }
     }
 
 

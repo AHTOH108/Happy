@@ -16,31 +16,29 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.iandp.happy.R;
-import com.iandp.happy.model.object.CategoryProduct;
 
 /**
- * Date creation: 14.03.2016.
+ * Date creation: 17.03.2016.
  */
-public class EditCategoryDialog extends AppCompatDialogFragment {
+public class EditTextDialog extends AppCompatDialogFragment {
 
-    private static final String CATEGORY_PRODUCT = "categoryProduct";
-    private static final String TAG_PARENT_FRAGMENT = "BirthdayDialogFragment";
+    private static final String ARG_TEXT = "text";
+    private static final String TAG_PARENT_FRAGMENT = "tagParentFragment";
 
-    private TextInputLayout textInputLayoutCategory;
-    private EditText editTextCategory;
-    private CategoryProduct mCategoryProduct;
+    private TextInputLayout mTextInputLayout;
+    private EditText mEditText;
 
-    public interface OnConfirmEditCategoryListener {
-        void onConfirmEditCategoryListener(CategoryProduct categoryProduct);
+    public interface OnConfirmEditListener {
+        void onConfirmEditListener(String string);
     }
 
-    private OnConfirmEditCategoryListener mOnConfirmListener;
+    private OnConfirmEditListener mOnConfirmListener;
 
-    public static EditCategoryDialog newInstance(CategoryProduct categoryProduct, String tagFragment) {
-        EditCategoryDialog fragment = new EditCategoryDialog();
+    public static EditTextDialog newInstance(String text, String tagFragment) {
+        EditTextDialog fragment = new EditTextDialog();
 
         Bundle args = new Bundle();
-        args.putParcelable(CATEGORY_PRODUCT, categoryProduct);
+        args.putString(ARG_TEXT, text);
         args.putString(TAG_PARENT_FRAGMENT, tagFragment);
         fragment.setArguments(args);
 
@@ -51,19 +49,19 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         return getArguments().getString(TAG_PARENT_FRAGMENT);
     }
 
-    public CategoryProduct getCategory() {
-        CategoryProduct object = getArguments().getParcelable(CATEGORY_PRODUCT);
-        if (object == null) object = new CategoryProduct();
-        return object;
+    public String getTextOnEdit() {
+        String str = getArguments().getParcelable(ARG_TEXT);
+        if (str == null) str = "";
+        return str;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getTagFragment().length() > 0) {
-            mOnConfirmListener = (OnConfirmEditCategoryListener) getFragmentManager().findFragmentByTag(getTagFragment());
+            mOnConfirmListener = (OnConfirmEditListener) getFragmentManager().findFragmentByTag(getTagFragment());
         } else {
-            mOnConfirmListener = (OnConfirmEditCategoryListener) activity;
+            mOnConfirmListener = (OnConfirmEditListener) activity;
         }
     }
 
@@ -76,11 +74,11 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
-        mCategoryProduct = getCategory();
+        String str = getTextOnEdit();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_edit_category, null);
-        setupView(view);
+        final View view = inflater.inflate(R.layout.dialog_edit_text, null);
+        setupView(view, str);
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
         adb.setView(view)
@@ -100,18 +98,18 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
         return adb.create();
     }
 
-    private void setupView(View view) {
-        textInputLayoutCategory = (TextInputLayout) view.findViewById(R.id.textInputLayoutCategory);
-        editTextCategory = (EditText) view.findViewById(R.id.editTextCategory);
+    private void setupView(View view, String text) {
+        mTextInputLayout = (TextInputLayout) view.findViewById(R.id.textInputLayout);
+        mEditText = (EditText) view.findViewById(R.id.editText);
 
-        showNameCategory(mCategoryProduct.getName());
-        editTextCategory.requestFocus();
+        showNameCategory(text);
+        mEditText.requestFocus();
         openKeyboard();
     }
 
     private void showNameCategory(String name) {
         if (name == null) name = "";
-        editTextCategory.setText(name);
+        mEditText.setText(name);
 
     }
 
@@ -122,19 +120,16 @@ public class EditCategoryDialog extends AppCompatDialogFragment {
 
     private void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(textInputLayoutCategory.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        imm.hideSoftInputFromWindow(mTextInputLayout.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         imm.toggleSoftInput(0, 0);
     }
 
     private void saveAndClose() {
-        textInputLayoutCategory.setError(null);
-        String name = editTextCategory.getText().toString();
-        if (!TextUtils.isEmpty(name)) {
-            if (mCategoryProduct == null)
-                mCategoryProduct = new CategoryProduct();
+        mTextInputLayout.setError(null);
+        String text = mEditText.getText().toString();
+        if (!TextUtils.isEmpty(text)) {
 
-            mCategoryProduct.setName(name);
-            mOnConfirmListener.onConfirmEditCategoryListener(mCategoryProduct);
+            mOnConfirmListener.onConfirmEditListener(text);
             closeDialog();
         } else {
 //            textInputLayoutCategory.setError(getString(R.string.error_edit_text));

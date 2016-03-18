@@ -1,6 +1,7 @@
 package com.iandp.happy.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
+import com.iandp.happy.activity.CategoryListActivity;
 import com.iandp.happy.activity.ProductDetailActivity;
-import com.iandp.happy.activity.ShopDetailActivity;
 import com.iandp.happy.model.dataBase.DBHelper;
+import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 
 
 public class ProductListFragment extends Fragment {
+
+    public static final int SELECT_CATEGORY = 500;
 
     private static final int SHOW_DETAIL = 1;
 
@@ -40,6 +44,7 @@ public class ProductListFragment extends Fragment {
 
     private DBHelper dbHelper;
     private ArrayList<Product> mListProduct;
+    private CategoryProduct filterCategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +55,22 @@ public class ProductListFragment extends Fragment {
         loadInstanceState(savedInstanceState);
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case SELECT_CATEGORY:
+                    CategoryProduct categoryProduct = data.getParcelableExtra(CategoryListActivity.RESULT_CATEGORY);
+                    if (categoryProduct != null && adapter !=null) {
+                        filterCategory = categoryProduct;
+                        mTextViewCategory.setText(filterCategory.getName());
+                        //TODO: обновление списка с ёчетом фильтра
+                    }
+                    break;
+            }
+        }
     }
 
     private void onCreateView(View view) {
@@ -66,7 +87,7 @@ public class ProductListFragment extends Fragment {
         mRelativeLayoutCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Тут выбрать категорию", Toast.LENGTH_SHORT).show();
+                goSelectCategory();
             }
         });
     }
@@ -81,9 +102,15 @@ public class ProductListFragment extends Fragment {
             for (int i = 0; i < 10; i++)
                 mListProduct.add(new Product());
             if (adapter != null) {
-                adapter.updateListCar(mListProduct);
+                adapter.updateList(mListProduct);
             }
         }
+    }
+
+    private void goSelectCategory(){
+        Intent intent = new Intent(getActivity(), CategoryListActivity.class);
+        //startActivity(intent);
+        startActivityForResult(intent, SELECT_CATEGORY);
     }
 
     private void goRemoveProduct(int idProduct) {
@@ -117,7 +144,7 @@ public class ProductListFragment extends Fragment {
             this.listItem.addAll(listItem);
         }
 
-        public void updateListCar(ArrayList<Product> listItem) {
+        public void updateList(ArrayList<Product> listItem) {
             this.listItem.clear();
             this.listItem.addAll(listItem);
             notifyDataSetChanged();

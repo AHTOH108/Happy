@@ -182,6 +182,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return product;
     }
 
+    /**
+     * ************ CategoryProduct **********
+     */
+
     public long addCategoryProduct(CategoryProduct categoryProduct) {
         if (categoryProduct.getId() < 0) {
             ContentValues cv = new ContentValues();
@@ -193,12 +197,28 @@ public class DBHelper extends SQLiteOpenHelper {
             this.close();
             return i;
         } else {
-            //TODO: Add UPDATE !!!!
+            updateCategoryProduct(categoryProduct);
             return -1;
         }
     }
 
-    public CategoryProduct getCategoryProduct(int id) {
+    public boolean updateCategoryProduct(CategoryProduct categoryProduct) {
+        if (categoryProduct.getId() < 0) return false;
+
+        long id = categoryProduct.getId();
+        String name = categoryProduct.getName();
+
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = this.getWritableDatabase();
+        cv.put(KEY_ID, id);
+        cv.put(KEY_NAME, name);
+        int updCount = db.update(TABLE_CATEGORY_PRODUCT, cv, KEY_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        this.close();
+        return updCount > 0;
+    }
+
+    public CategoryProduct getCategoryProduct(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CATEGORY_PRODUCT, new String[]{KEY_ID, KEY_NAME},
@@ -220,9 +240,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<CategoryProduct> getAllCategoryProduct() {
         ArrayList<CategoryProduct> listCategoryProduct = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY_PRODUCT;
-
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.query(TABLE_CATEGORY_PRODUCT, null, null, null, null, null, KEY_NAME);
+        //Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -236,6 +256,17 @@ public class DBHelper extends SQLiteOpenHelper {
         this.close();
         return listCategoryProduct;
     }
+
+    public int removeCategoryProduct(long idCategory) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int delCount = db.delete(TABLE_CATEGORY_PRODUCT, KEY_ID + " = " + idCategory, null);
+        db.close();
+        return delCount;
+    }
+
+    /**
+     * ************ Cost **********
+     */
 
     public long addCost(Cost cost, int idProduct) {
         if (cost.getId() < 0) {
@@ -303,6 +334,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return listCost;
     }
 
+    /**
+     * ************ Image **********
+     */
+
     public long addImage(Image image, int idProduct) {
         if (image.getId() < 0) {
             String path = image.getPath();
@@ -347,6 +382,10 @@ public class DBHelper extends SQLiteOpenHelper {
         this.close();
         return listImage;
     }
+
+    /**
+     * ************ Shop **********
+     */
 
     public long addShop(Shop shop) {
         if (shop.getId() < 0) {
@@ -462,12 +501,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return listShop;
     }
 
-    public int removeShop(int idShop) {
+    public int removeShop(long idShop) {
         SQLiteDatabase db = this.getWritableDatabase();
         int delCount = db.delete(TABLE_SHOP, KEY_ID + " = " + idShop, null);
         db.close();
         return delCount;
     }
+
+    /**
+     * ************ LogoShop **********
+     */
 
     public long addLogoShop(Image image) {
         String path = image.getPath();
