@@ -23,21 +23,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@color/background_detail_product"
+                android:orientation="vertical"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7">
 
                 <View
                     android:layout_width="match_parent"
-                    android:background="@drawable/bg_gradient_green"
-                    android:layout_height="?attr/actionBarSize"/>
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/bg_gradient_green" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_height="wrap_content">
+                    android:paddingRight="12dp">
 
                     <Spinner
                         android:id="@+id/spinnerCategory"
@@ -65,9 +65,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="12dp"
                     android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/name_product"
                     android:inputType="textPersonName"
                     android:singleLine="true"
@@ -76,16 +76,17 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginRight="12dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:layout_height="wrap_content">
+                    android:layout_marginRight="12dp">
 
                     <ImageView
                         android:id="@+id/photoProduct"
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/temp_gran" />
+                        android:src="@mipmap/placeholder_image"
+                        tools:ignore="ContentDescription" />
 
                     <ImageButton
                         android:id="@+id/imageButtonAddPhoto"
@@ -95,7 +96,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:layout_margin="8dp"
-                        android:src="@mipmap/library_plus" />
+                        android:src="@mipmap/library_plus"
+                        tools:ignore="ContentDescription"  />
 
                 </RelativeLayout>
 
@@ -103,9 +105,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginRight="12dp">
 
                     <TextView
                         android:id="@+id/textViewDescription"
@@ -117,7 +119,6 @@
                         android:layout_toStartOf="@+id/buttonEditDescription"
                         android:ellipsize="end"
                         android:maxLines="5"
-                        android:text="jhvvjb b h b h bh j hv hv jhv jv hvf hevwf h ehfb ejrfjkerbg jbr b h bh j hv hv jhv jv hvf hevwf h ehfb ejrfjkerbg jbr b h bh j hv hv jhv jv hvf hevwf h ehfb ejrfjkerbg jbr b h bh j hv hv jhv jv hvf hevwf h ehfb ejrfjkerbg jbr bh j hv hv jhv jv hvf hevwf h ehfb ejrfjkerbg jbrejgbrej gjree rfe rfer f erf er "
                         android:textColor="@color/color_gray_text" />
 
                     <ImageButton
@@ -127,7 +128,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@mipmap/library_plus" />
+                        android:src="@mipmap/library_plus"
+                        tools:ignore="ContentDescription"  />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -139,6 +141,37 @@
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textViewTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_white"
+                        android:textSize="20sp"
+                        android:layout_toLeftOf="@+id/textViewSave"
+                        android:layout_toStartOf="@+id/textViewSave" />
+
+                    <TextView
+                        android:id="@+id/textViewSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="@string/save"
+                        android:textColor="@color/color_white"
+                        android:background="?attr/selectableItemBackground"
+                        android:textSize="16sp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+
+                </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>

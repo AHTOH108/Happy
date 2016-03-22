@@ -30,11 +30,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         //setToolbar();
 
-        int idShop = getIntent().getIntExtra(DATA_ID_PRODUCT, -1);
+        long idShop = getIntent().getLongExtra(DATA_ID_PRODUCT, -1);
         replaceContentFragment(idShop);
     }
 
-    protected void replaceContentFragment(int id) {
+    protected void replaceContentFragment(long id) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragmentCurrent = fragmentManager.findFragmentById(R.id.content_frame);
 

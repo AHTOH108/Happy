@@ -50,7 +50,7 @@ public class EditTextDialog extends AppCompatDialogFragment {
     }
 
     public String getTextOnEdit() {
-        String str = getArguments().getParcelable(ARG_TEXT);
+        String str = getArguments().getString(ARG_TEXT);
         if (str == null) str = "";
         return str;
     }

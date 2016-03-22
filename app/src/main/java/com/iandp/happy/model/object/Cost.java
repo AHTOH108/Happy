@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 public class Cost implements Parcelable {
 
-    private int id;
+    private long id;
     private long date;
     private double price;
     private double priceMax;
@@ -48,11 +48,11 @@ public class Cost implements Parcelable {
         this.shop = shop;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -129,7 +129,7 @@ public class Cost implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeLong(this.getDate());
         dest.writeDouble(this.getPrice());
         dest.writeDouble(this.getPriceMax());
@@ -153,7 +153,7 @@ public class Cost implements Parcelable {
     };
 
     private Cost(Parcel source) {
-        this.setId(source.readInt());
+        this.setId(source.readLong());
         this.setDate(source.readLong());
         this.setPrice(source.readDouble());
         this.setPriceMax(source.readDouble());

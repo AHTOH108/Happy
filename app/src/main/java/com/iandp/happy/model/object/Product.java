@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Product implements Parcelable {
 
-    private int id;
+    private long id;
     private CategoryProduct categoryProduct;
     private String brand;
     private String description;
@@ -26,11 +26,11 @@ public class Product implements Parcelable {
         this.imageList = new ArrayList<>();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -107,7 +107,7 @@ public class Product implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeParcelable(this.getCategoryProduct(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
         dest.writeString(this.getBrand());
         dest.writeString(this.getDescription());
@@ -130,7 +130,7 @@ public class Product implements Parcelable {
     };
 
     private Product(Parcel source) {
-        this.setId(source.readInt());
+        this.setId(source.readLong());
         this.setCategoryProduct((CategoryProduct) source.readParcelable(CategoryProduct.class.getClassLoader()));
         this.setBrand(source.readString());
         this.setDescription(source.readString());

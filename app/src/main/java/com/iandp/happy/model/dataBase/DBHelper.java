@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    //private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "dataBaseHappy";
 
     private static final String TABLE_PRODUCT = "product";
@@ -107,7 +107,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public long addNewProduct(Product product) {
         if (product.getId() < 0) {
-            int idCategory = (int) addCategoryProduct(product.getCategoryProduct());
+            long idCategory = product.getCategoryProduct().getId();
             ContentValues cv = new ContentValues();
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -117,11 +117,34 @@ public class DBHelper extends SQLiteOpenHelper {
             cv.put(KEY_RATING, product.getRating());
             long i = db.insert(TABLE_PRODUCT, null, cv);
             this.close();
+            updateListCost(product.getCostList(), i);
             return i;
         } else {
-            //TODO: Add UPDATE !!!!
+            updateProduct(product);
             return -1;
         }
+    }
+
+    public boolean updateProduct(Product product) {
+        if (product.getId() < 0) return false;
+
+        long id = product.getId();
+        long idCategory = product.getCategoryProduct().getId();
+        String brand = product.getBrand();
+        String description = product.getDescription();
+        int rating = product.getRating();
+
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = this.getWritableDatabase();
+        cv.put(KEY_ID_CATEGORY, idCategory);
+        cv.put(KEY_BRAND, brand);
+        cv.put(KEY_DESCRIPTION, description);
+        cv.put(KEY_RATING, rating);
+        int updCount = db.update(TABLE_PRODUCT, cv, KEY_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        this.close();
+        updateListCost(product.getCostList(), product.getId());
+        return updCount > 0;
     }
 
     //TODO: ADD PAGE_LIMIT !!
@@ -129,10 +152,11 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Product> listProduct = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(TABLE_PRODUCT, null, null, null, null, null, null);
+        Cursor cursor = db.query(TABLE_PRODUCT, null, null, null, null, null, KEY_ID + " DESC");
 
-// определяем номера столбцов по имени в выборке
+        // определяем номера столбцов по имени в выборке
         int idColIndex = cursor.getColumnIndex(KEY_ID);
+        int idCategory = cursor.getColumnIndex(KEY_ID_CATEGORY);
         int brandColIndex = cursor.getColumnIndex(KEY_BRAND);
         int descriptionColIndex = cursor.getColumnIndex(KEY_DESCRIPTION);
         int ratingColIndex = cursor.getColumnIndex(KEY_RATING);
@@ -140,9 +164,8 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 Product item = new Product();
 
-
-                item.setId(cursor.getInt(idColIndex));
-                // item.setCategoryProduct(getCategoryProduct(cursor.getInt(1)));
+                item.setId(cursor.getLong(idColIndex));
+                item.setCategoryProduct(getCategoryProduct(cursor.getLong(idCategory)));
                 item.setBrand(cursor.getString(brandColIndex));
                 item.setDescription(cursor.getString(descriptionColIndex));
                 item.setRating(cursor.getInt(ratingColIndex));
@@ -154,7 +177,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return listProduct;
     }
 
-    public Product getProduct(int id) {
+    public Product getProduct(long id) {
         if (id < 0) return new Product();
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -170,16 +193,24 @@ public class DBHelper extends SQLiteOpenHelper {
             int ratingColIndex = cursor.getColumnIndex(KEY_RATING);
 
             cursor.moveToFirst();
-            product.setId(cursor.getInt(idColIndex));
-            product.setCategoryProduct(getCategoryProduct(cursor.getInt(idCategoryColIndex)));
+            product.setId(cursor.getLong(idColIndex));
+            product.setCategoryProduct(getCategoryProduct(cursor.getLong(idCategoryColIndex)));
             product.setBrand(cursor.getString(brandColIndex));
             product.setDescription(cursor.getString(descriptionColIndex));
             product.setRating(cursor.getInt(ratingColIndex));
             cursor.close();
+            product.setCostList(getListCost(product.getId()));
         }
 
         this.close();
         return product;
+    }
+
+    public int removeProduct(long idProduct) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int delCount = db.delete(TABLE_PRODUCT, KEY_ID + " = " + idProduct, null);
+        db.close();
+        return delCount;
     }
 
     /**
@@ -219,6 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public CategoryProduct getCategoryProduct(long id) {
+        if (id < 0) return new CategoryProduct();
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CATEGORY_PRODUCT, new String[]{KEY_ID, KEY_NAME},
@@ -227,9 +259,14 @@ public class DBHelper extends SQLiteOpenHelper {
         CategoryProduct categoryProduct = new CategoryProduct();
         if (cursor != null) {
             cursor.moveToFirst();
-            String str = cursor.getString(0);
-            categoryProduct.setId(Integer.parseInt(str));
-            categoryProduct.setName(cursor.getString(1));
+
+            int idColIndex = cursor.getColumnIndex(KEY_ID);
+            int nameColIndex = cursor.getColumnIndex(KEY_NAME);
+
+            String str = cursor.getString(idColIndex);
+            //categoryProduct.setId(cursor.getLong(idColIndex));
+            categoryProduct.setId(Long.valueOf(str));
+            categoryProduct.setName(cursor.getString(nameColIndex));
             cursor.close();
         }
 
@@ -239,16 +276,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<CategoryProduct> getAllCategoryProduct() {
         ArrayList<CategoryProduct> listCategoryProduct = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY_PRODUCT;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_CATEGORY_PRODUCT, null, null, null, null, null, KEY_NAME);
-        //Cursor cursor = db.rawQuery(selectQuery, null);
-
         if (cursor.moveToFirst()) {
+            int idColIndex = cursor.getColumnIndex(KEY_ID);
+            int nameColIndex = cursor.getColumnIndex(KEY_NAME);
+
             do {
                 CategoryProduct item = new CategoryProduct();
-                item.setId(cursor.getInt(0));
-                item.setName(cursor.getString(1));
+                item.setId(cursor.getLong(idColIndex));
+                item.setName(cursor.getString(nameColIndex));
                 listCategoryProduct.add(item);
             } while (cursor.moveToNext());
         }
@@ -268,9 +305,9 @@ public class DBHelper extends SQLiteOpenHelper {
      * ************ Cost **********
      */
 
-    public long addCost(Cost cost, int idProduct) {
+    public long addCost(Cost cost, long idProduct) {
         if (cost.getId() < 0) {
-            int idShop = cost.getShop().getId();
+            long idShop = cost.getShop().getId();
             double price = cost.getPrice();
             double priceMax = cost.getPriceMax();
             long date = cost.getDate();
@@ -290,12 +327,58 @@ public class DBHelper extends SQLiteOpenHelper {
             this.close();
             return i;
         } else {
-            //TODO: Add UPDATE!!!!
+            updateCost(cost, idProduct);
             return -1;
         }
     }
 
-    public ArrayList<Cost> getListCost(int idProduct) {
+    public void updateListCost(ArrayList<Cost> listCost, long idProduct) {
+        if (listCost != null) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            for (int i = 0; i < listCost.size(); i++) {
+                Cost cost = listCost.get(i);
+                ContentValues cv = new ContentValues();
+                cv.put(KEY_ID_SHOP, cost.getShop().getId());
+                cv.put(KEY_ID_PRODUCT, idProduct);
+                cv.put(KEY_PRICE, cost.getPrice());
+                cv.put(KEY_PRICE_MAX, cost.getPriceMax());
+                cv.put(KEY_DATE, cost.getDate());
+                cv.put(KEY_VOLUME, cost.getVolume());
+                cv.put(KEY_UNITS, cost.getUnits().getId());
+                db.update(TABLE_COST, cv, KEY_ID + " = ?",
+                        new String[]{String.valueOf(cost.getId())});
+            }
+            this.close();
+        }
+    }
+
+    public boolean updateCost(Cost cost, long idProduct) {
+        if (cost.getId() < 0) return false;
+
+        long id = cost.getId();
+        long idShop = cost.getShop().getId();
+        double price = cost.getPrice();
+        double priceMax = cost.getPriceMax();
+        long date = cost.getDate();
+        double volume = cost.getVolume();
+        int units = cost.getUnits().getId();
+
+        ContentValues cv = new ContentValues();
+        SQLiteDatabase db = this.getWritableDatabase();
+        cv.put(KEY_ID_SHOP, idShop);
+        cv.put(KEY_ID_PRODUCT, idProduct);
+        cv.put(KEY_PRICE, price);
+        cv.put(KEY_PRICE_MAX, priceMax);
+        cv.put(KEY_DATE, date);
+        cv.put(KEY_VOLUME, volume);
+        cv.put(KEY_UNITS, units);
+        int updCount = db.update(TABLE_COST, cv, KEY_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        this.close();
+        return updCount > 0;
+    }
+
+    public ArrayList<Cost> getListCost(long idProduct) {
         ArrayList<Cost> listCost = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -316,7 +399,7 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     Cost item = new Cost();
-                    item.setId(cursor.getInt(idColIndex));
+                    item.setId(cursor.getLong(idColIndex));
                     item.setPrice(cursor.getDouble(priceColIndex));
                     item.setPriceMax(cursor.getDouble(priceMaxColIndex));
                     item.setDate(cursor.getInt(dateColIndex));
@@ -334,11 +417,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return listCost;
     }
 
+    public int removeCost(long idCost) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int delCount = db.delete(TABLE_CATEGORY_PRODUCT, KEY_ID + " = " + idCost, null);
+        db.close();
+        return delCount;
+    }
+
     /**
      * ************ Image **********
      */
 
-    public long addImage(Image image, int idProduct) {
+    public long addImage(Image image, long idProduct) {
         if (image.getId() < 0) {
             String path = image.getPath();
             ContentValues cv = new ContentValues();
@@ -355,7 +445,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<Image> getListImage(int idProduct) {
+    public ArrayList<Image> getListImage(long idProduct) {
         ArrayList<Image> listImage = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -371,7 +461,7 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     Image item = new Image();
-                    item.setId(cursor.getInt(idColIndex));
+                    item.setId(cursor.getLong(idColIndex));
                     item.setPath(cursor.getString(pathColIndex));
                     listImage.add(item);
                 } while (cursor.moveToNext());
@@ -393,9 +483,9 @@ public class DBHelper extends SQLiteOpenHelper {
             double latitude = shop.getLatitude();
             double longitude = shop.getLongitude();
             String address = shop.getAddress();
-            int idLogo = shop.getImage().getId();
+            long idLogo = shop.getImage().getId();
             if (idLogo < 0)
-                idLogo = (int) addLogoShop(shop.getImage());
+                idLogo = addLogoShop(shop.getImage());
 
             ContentValues cv = new ContentValues();
             SQLiteDatabase db = this.getWritableDatabase();
@@ -418,9 +508,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean updateShop(Shop shop) {
         if (shop.getId() < 0) return false;
 
-        int id = shop.getId();
+        long id = shop.getId();
         String name = shop.getName();
-        int idLogo = shop.getImage().getId();
+        long idLogo = shop.getImage().getId();
         double latitude = shop.getLatitude();
         double longitude = shop.getLongitude();
         String address = shop.getAddress();
@@ -440,7 +530,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return updCount > 0;
     }
 
-    public Shop getShop(int id) {
+    public Shop getShop(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SHOP,
                 new String[]{KEY_ID, KEY_NAME, KEY_ID_LOGO, KEY_LATITUDE, KEY_LONGITUDE, KEY_ADDRESS},
@@ -457,9 +547,9 @@ public class DBHelper extends SQLiteOpenHelper {
             int addressColIndex = cursor.getColumnIndex(KEY_ADDRESS);
 
             cursor.moveToFirst();
-            shop.setId(cursor.getInt(idColIndex));
+            shop.setId(cursor.getLong(idColIndex));
             shop.setName(cursor.getString(nameColIndex));
-            int idLogo = cursor.getInt(idLogoColIndex);
+            long idLogo = cursor.getLong(idLogoColIndex);
             shop.setLatitude(cursor.getDouble(latitudeColIndex));
             shop.setLongitude(cursor.getDouble(longitudeColIndex));
             shop.setAddress(cursor.getString(addressColIndex));
@@ -485,9 +575,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 int addressColIndex = cursor.getColumnIndex(KEY_ADDRESS);
                 do {
                     Shop shop = new Shop();
-                    shop.setId(cursor.getInt(idColIndex));
+                    shop.setId(cursor.getLong(idColIndex));
                     shop.setName(cursor.getString(nameColIndex));
-                    int idLogo = cursor.getInt(idLogoColIndex);
+                    long idLogo = cursor.getLong(idLogoColIndex);
                     shop.setLatitude(cursor.getDouble(latitudeColIndex));
                     shop.setLongitude(cursor.getDouble(longitudeColIndex));
                     shop.setAddress(cursor.getString(addressColIndex));
@@ -526,7 +616,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean updateLogoShop(Image image) {
         if (image.getId() < 0) return false;
 
-        int id = image.getId();
+        long id = image.getId();
         String path = image.getPath();
 
         ContentValues cv = new ContentValues();
@@ -540,7 +630,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return updCount > 0;
     }
 
-    public Image getLogoShop(int id) {
+    public Image getLogoShop(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_LOGO_SHOP,
                 new String[]{KEY_ID, KEY_PATH},
@@ -552,7 +642,7 @@ public class DBHelper extends SQLiteOpenHelper {
             int idColIndex = cursor.getColumnIndex(KEY_ID);
             int pathColIndex = cursor.getColumnIndex(KEY_PATH);
             cursor.moveToFirst();
-            image.setId(cursor.getInt(idColIndex));
+            image.setId(cursor.getLong(idColIndex));
             image.setPath(cursor.getString(pathColIndex));
             cursor.close();
         }

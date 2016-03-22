@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iandp.happy.R;
 import com.iandp.happy.activity.CategoryListActivity;
@@ -31,9 +30,8 @@ import java.util.ArrayList;
 
 public class ProductListFragment extends Fragment {
 
-    public static final int SELECT_CATEGORY = 500;
-
-    private static final int SHOW_DETAIL = 1;
+    public static final int CODE_SELECT_CATEGORY = 500;
+    public static final int CODE_EDIT_PRODUCT = 600;
 
     private RelativeLayout mRelativeLayoutCategory;
     private TextView mTextViewCategory;
@@ -61,13 +59,16 @@ public class ProductListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case SELECT_CATEGORY:
+                case CODE_SELECT_CATEGORY:
                     CategoryProduct categoryProduct = data.getParcelableExtra(CategoryListActivity.RESULT_CATEGORY);
-                    if (categoryProduct != null && adapter !=null) {
+                    if (categoryProduct != null && adapter != null) {
                         filterCategory = categoryProduct;
                         mTextViewCategory.setText(filterCategory.getName());
                         //TODO: обновление списка с ёчетом фильтра
                     }
+                    break;
+                case CODE_EDIT_PRODUCT:
+                    updateProductList();
                     break;
             }
         }
@@ -99,28 +100,28 @@ public class ProductListFragment extends Fragment {
     private void updateProductList() {
         if (dbHelper != null) {
             mListProduct = dbHelper.getAllProduct();
-            for (int i = 0; i < 10; i++)
-                mListProduct.add(new Product());
             if (adapter != null) {
                 adapter.updateList(mListProduct);
             }
         }
     }
 
-    private void goSelectCategory(){
+    private void goSelectCategory() {
         Intent intent = new Intent(getActivity(), CategoryListActivity.class);
         //startActivity(intent);
-        startActivityForResult(intent, SELECT_CATEGORY);
+        startActivityForResult(intent, CODE_SELECT_CATEGORY);
     }
 
-    private void goRemoveProduct(int idProduct) {
-
+    private void goRemoveProduct(long idProduct) {
+        //TODO: добавить анимацию удаления и оптимизировать процесс удаления
+        dbHelper.removeProduct(idProduct);
+        updateProductList();
     }
 
-    private void goDetailProduct(int idProduct) {
+    private void goDetailProduct(long idProduct) {
         Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
         intent.putExtra(ProductDetailActivity.DATA_ID_PRODUCT, idProduct);
-        startActivityForResult(intent, SHOW_DETAIL);
+        startActivityForResult(intent, CODE_EDIT_PRODUCT);
     }
 
     /**
@@ -194,7 +195,7 @@ public class ProductListFragment extends Fragment {
                     viewHolder.view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goDetailProduct((int) v.getTag());
+                            goDetailProduct((long) v.getTag());
                         }
                     });
 
@@ -202,7 +203,7 @@ public class ProductListFragment extends Fragment {
                     ((ViewHolderProduct) viewHolder).imageButtonRemove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goRemoveProduct((int) v.getTag());
+                            goRemoveProduct((long) v.getTag());
                         }
                     });
 

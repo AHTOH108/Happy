@@ -84,13 +84,13 @@ public class ShopListFragment extends Fragment {
         adapter.updateListCar(listShop);
     }
 
-    private void goRemoveShop(int id) {
+    private void goRemoveShop(long id) {
         if (dbHelper.removeShop(id) > 0) {
             updateShopList();
         }
     }
 
-    private void goDetailShop(int id) {
+    private void goDetailShop(long id) {
         Intent intent = new Intent(getActivity(), ShopDetailActivity.class);
         intent.putExtra(ShopDetailActivity.DATA_ID_SHOP, id);
         startActivityForResult(intent, SHOW_DETAIL);
@@ -170,7 +170,7 @@ public class ShopListFragment extends Fragment {
                     ((ViewHolderShop) viewHolder).imageButtonRemove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goRemoveShop((int) v.getTag());
+                            goRemoveShop((long) v.getTag());
                         }
                     });
 
@@ -178,7 +178,7 @@ public class ShopListFragment extends Fragment {
                     ((ViewHolderShop) viewHolder).view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goDetailShop((int) v.getTag());
+                            goDetailShop((long) v.getTag());
                         }
                     });
                     break;

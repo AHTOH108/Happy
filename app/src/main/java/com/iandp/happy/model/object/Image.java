@@ -8,7 +8,7 @@ import android.os.Parcelable;
  */
 public class Image implements Parcelable {
 
-    private int id;
+    private long id;
     private String path;
 
     public Image() {
@@ -16,11 +16,11 @@ public class Image implements Parcelable {
         this.path = "";
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -39,7 +39,7 @@ public class Image implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeString(this.getPath());
     }
 
@@ -57,7 +57,7 @@ public class Image implements Parcelable {
     };
 
     private Image(Parcel source) {
-        this.setId(source.readInt());
+        this.setId(source.readLong());
         this.setPath(source.readString());
     }
 }

@@ -34,18 +34,18 @@ public class DetailShopFragment extends Fragment {
     private Shop mShop = null;
 
 
-    public static DetailShopFragment newInstance(int idShop) {
+    public static DetailShopFragment newInstance(long idShop) {
         Bundle args = new Bundle();
 
         DetailShopFragment fragment = new DetailShopFragment();
-        args.putInt(ARG_ID_SHOP, idShop);
+        args.putLong(ARG_ID_SHOP, idShop);
         fragment.setArguments(args);
 
         return fragment;
     }
 
-    public int getIdShop() {
-        return getArguments().getInt(ARG_ID_SHOP);
+    public long getIdShop() {
+        return getArguments().getLong(ARG_ID_SHOP);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DetailShopFragment extends Fragment {
     }
 
     private void loadInstanceState(Bundle savedInstanceState) {
-        int idShop = getIdShop();
+        long idShop = getIdShop();
         if (idShop > 0)
             mShop = dbHelper.getShop(getIdShop());
         else {

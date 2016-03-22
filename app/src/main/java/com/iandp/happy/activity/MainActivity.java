@@ -44,7 +44,7 @@ public class MainActivity extends BaseActivity {
     private static final int NAV_MENU_POSITION_TEST = 4;
     private static final int NAV_MENU_POSITION_ABOUT = 5;
 
-    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_CALCULATOR;
+    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_PRODUCT;
 
     private static final String CURRENT_MENU_POSITION = "CurrentMenuPosition";
 

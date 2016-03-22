@@ -7,14 +7,14 @@ import android.os.Parcelable;
  * Created on 21.09.2015.
  */
 public class Shop implements Parcelable {
-    private int id;
+    private long id;
     private String name;
     private Image image;
     private double latitude;
     private double longitude;
     private String address;
 
-    public Shop(int id, String name,Image image, double latitude, double longitude, String address) {
+    public Shop(long id, String name,Image image, double latitude, double longitude, String address) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -32,11 +32,11 @@ public class Shop implements Parcelable {
         this.address = "";
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -87,7 +87,7 @@ public class Shop implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getId());
+        dest.writeLong(this.getId());
         dest.writeString(this.getName());
         dest.writeParcelable(this.getImage(), Parcelable.CONTENTS_FILE_DESCRIPTOR);
         dest.writeDouble(this.getLatitude());
@@ -109,7 +109,7 @@ public class Shop implements Parcelable {
     };
 
     private Shop(Parcel source) {
-        this.setId(source.readInt());
+        this.setId(source.readLong());
         this.setName(source.readString());
         this.setImage((Image) source.readParcelable(Image.class.getClassLoader()));
         this.setLatitude(source.readDouble());
