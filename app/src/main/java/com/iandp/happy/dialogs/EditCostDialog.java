@@ -2,13 +2,13 @@ package com.iandp.happy.dialogs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
@@ -36,16 +35,16 @@ public class EditCostDialog extends AppCompatDialogFragment {
     private static final String COST = "cost";
     private static final String TAG_PARENT_FRAGMENT = "tagParentFragment";
 
-    private TextInputLayout textInputLayoutPrice;
+    private TextInputLayout mTextInputLayoutPrice;
     //private TextInputLayout textInputLayoutPriceMax;
-    private TextInputLayout textInputLayoutVolume;
-    private EditText editTextPrice;
-    private EditText editTextPriceMax;
-    private EditText editTextVolume;
-    private Spinner spinnerUnits;
-    private Spinner spinnerShop;
-    private Button buttonCancel;
-    private Button buttonOk;
+    private TextInputLayout mTextInputLayoutVolume;
+    private EditText mEditTextPrice;
+    private EditText mEditTextPriceMax;
+    private EditText mEditTextVolume;
+    private Spinner mSpinnerUnits;
+    private Spinner mSpinnerShop;
+    private Button mButtonCancel;
+    private Button mButtonOk;
 
     private Cost mCost;
     private ArrayList<Units> listUnits = new Units().getListUnits();
@@ -91,8 +90,20 @@ public class EditCostDialog extends AppCompatDialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        closeKeyboard();
         mOnConfirmListener = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        closeKeyboard();
+        closeKeyboard();
+        super.onDismiss(dialog);
+        closeKeyboard();
     }
 
     @NonNull
@@ -112,30 +123,30 @@ public class EditCostDialog extends AppCompatDialogFragment {
     }
 
     private void setupView(View view) {
-        textInputLayoutPrice = (TextInputLayout) view.findViewById(R.id.textInputLayoutPrice);
+        mTextInputLayoutPrice = (TextInputLayout) view.findViewById(R.id.textInputLayoutPrice);
         //textInputLayoutPriceMax = (TextInputLayout) view.findViewById(R.id.textInputLayoutPriceMax);
-        textInputLayoutVolume = (TextInputLayout) view.findViewById(R.id.textInputLayoutVolume);
-        editTextPrice = (EditText) view.findViewById(R.id.editTextPrice);
-        editTextPriceMax = (EditText) view.findViewById(R.id.editTextPriceMax);
-        editTextVolume = (EditText) view.findViewById(R.id.editTextVolume);
-        spinnerUnits = (Spinner) view.findViewById(R.id.spinnerUnits);
-        spinnerShop = (Spinner) view.findViewById(R.id.spinnerShop);
-        buttonCancel = (Button) view.findViewById(R.id.buttonCancel);
-        buttonOk = (Button) view.findViewById(R.id.buttonOk);
+        mTextInputLayoutVolume = (TextInputLayout) view.findViewById(R.id.textInputLayoutVolume);
+        mEditTextPrice = (EditText) view.findViewById(R.id.editTextPrice);
+        mEditTextPriceMax = (EditText) view.findViewById(R.id.editTextPriceMax);
+        mEditTextVolume = (EditText) view.findViewById(R.id.editTextVolume);
+        mSpinnerUnits = (Spinner) view.findViewById(R.id.spinnerUnits);
+        mSpinnerShop = (Spinner) view.findViewById(R.id.spinnerShop);
+        mButtonCancel = (Button) view.findViewById(R.id.buttonCancel);
+        mButtonOk = (Button) view.findViewById(R.id.buttonOk);
 
-        setupSpinnerUnitsView(spinnerUnits);
-        setupSpinnerShopView(spinnerShop, listShop);
+        setupSpinnerUnitsView(mSpinnerUnits);
+        setupSpinnerShopView(mSpinnerShop, listShop);
 
         showInfoProduct(mCost);
 
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeDialog();
             }
         });
 
-        buttonOk.setOnClickListener(new View.OnClickListener() {
+        mButtonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveCostAndClose();
@@ -174,59 +185,59 @@ public class EditCostDialog extends AppCompatDialogFragment {
     }
 
     private void selectItemSpinnerUnits(int idUnits) {
-        if (spinnerUnits == null || listUnits == null) return;
-        for (int i = 0; i < listUnits.size() && i < spinnerUnits.getCount(); i++) {
+        if (mSpinnerUnits == null || listUnits == null) return;
+        for (int i = 0; i < listUnits.size() && i < mSpinnerUnits.getCount(); i++) {
             if (listUnits.get(i).getId() == idUnits)
-                spinnerUnits.setSelection(i);
+                mSpinnerUnits.setSelection(i);
         }
     }
 
     private void selectItemSpinnerShop(long idShop) {
-        if (spinnerShop == null || listShop == null) return;
-        for (int i = 0; i < listShop.size() && i < spinnerShop.getCount(); i++) {
+        if (mSpinnerShop == null || listShop == null) return;
+        for (int i = 0; i < listShop.size() && i < mSpinnerShop.getCount(); i++) {
             if (listShop.get(i).getId() == idShop)
-                spinnerShop.setSelection(i);
+                mSpinnerShop.setSelection(i);
         }
     }
 
     private void showInfoProduct(Cost cost) {
         if (cost == null) return;
-        editTextPrice.setText(cost.getPrice() > 0 ? String.valueOf(cost.getPrice()) : "");
-        editTextPriceMax.setText(cost.getPriceMax() > 0 ? String.valueOf(cost.getPriceMax()) : "");
-        editTextVolume.setText(cost.getVolume() > 0 ? String.valueOf(cost.getVolume()) : "");
+        mEditTextPrice.setText(cost.getPrice() > 0 ? String.valueOf(cost.getPrice()) : "");
+        mEditTextPriceMax.setText(cost.getPriceMax() > 0 ? String.valueOf(cost.getPriceMax()) : "");
+        mEditTextVolume.setText(cost.getVolume() > 0 ? String.valueOf(cost.getVolume()) : "");
         selectItemSpinnerUnits(cost.getUnits().getId());
         selectItemSpinnerShop(cost.getShop().getId());
         openKeyboard();
+        mEditTextPrice.setSelection(mEditTextPrice.getText().length());
+        mEditTextPrice.requestFocus();
     }
 
     private void saveCostAndClose() {
         if (isCorrectData()) {
             try {
-                mCost.setPrice(Double.parseDouble(editTextPrice.getText().toString()));
+                mCost.setPrice(Double.parseDouble(mEditTextPrice.getText().toString()));
             } catch (NumberFormatException e) {
                 mCost.setPrice(-1);
             }
 
             try {
-                mCost.setPriceMax(Double.parseDouble(editTextPrice.getText().toString()));
+                mCost.setPriceMax(Double.parseDouble(mEditTextPrice.getText().toString()));
             } catch (NumberFormatException e) {
                 mCost.setPriceMax(-1);
             }
 
             try {
-                mCost.setVolume(Double.parseDouble(editTextVolume.getText().toString()));
+                mCost.setVolume(Double.parseDouble(mEditTextVolume.getText().toString()));
             } catch (NumberFormatException e) {
                 mCost.setVolume(-1);
             }
-            int k = spinnerUnits.getSelectedItemPosition();
+            int k = mSpinnerUnits.getSelectedItemPosition();
             if (listUnits.size() > k)
                 mCost.setUnits(listUnits.get(k));
-            k = spinnerShop.getSelectedItemPosition();
+            k = mSpinnerShop.getSelectedItemPosition();
             if (listShop.size() > k)
                 mCost.setShop(listShop.get(k));
             mCost.setDate(DateUtil.getNowTime());
-
-            Toast.makeText(getActivity(),"time: " + DateUtil.getStringDateForMask(mCost.getDate(), "HH:mm"), Toast.LENGTH_SHORT).show();
 
             mOnConfirmListener.onConfirmEditCostListener(mCost);
             this.dismiss();
@@ -234,20 +245,20 @@ public class EditCostDialog extends AppCompatDialogFragment {
     }
 
     private boolean isCorrectData() {
-        textInputLayoutPrice.setError(null);
-        textInputLayoutVolume.setError(null);
+        mTextInputLayoutPrice.setError(null);
+        mTextInputLayoutVolume.setError(null);
 
         double price;
         double volume;
 
         try {
-            price = Double.parseDouble(editTextPrice.getText().toString());
+            price = Double.parseDouble(mEditTextPrice.getText().toString());
         } catch (NumberFormatException e) {
             price = -1;
         }
 
         try {
-            volume = Double.parseDouble(editTextVolume.getText().toString());
+            volume = Double.parseDouble(mEditTextVolume.getText().toString());
         } catch (NumberFormatException e) {
             volume = -1;
         }
@@ -256,14 +267,14 @@ public class EditCostDialog extends AppCompatDialogFragment {
         boolean error = false;
 
         if (volume <= 0) {
-            textInputLayoutVolume.setError(getString(R.string.error_edit_text));
-            focusView = textInputLayoutVolume;
+            mTextInputLayoutVolume.setError(getString(R.string.error_edit_text));
+            focusView = mTextInputLayoutVolume;
             error = true;
         }
 
         if (price <= 0) {
-            textInputLayoutPrice.setError(getString(R.string.error_edit_text));
-            focusView = textInputLayoutPrice;
+            mTextInputLayoutPrice.setError(getString(R.string.error_edit_text));
+            focusView = mTextInputLayoutPrice;
             error = true;
         }
 
@@ -274,15 +285,16 @@ public class EditCostDialog extends AppCompatDialogFragment {
         return !error;
     }
 
-    // TODO: доработать открытие и закрытие клавиатуры!!!
     private void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(textInputLayoutPrice.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        imm.hideSoftInputFromWindow(mButtonCancel.getWindowToken(), 0);
     }
 
     private void openKeyboard() {
+        /*InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mTextInputLayoutPrice.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);*/
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(textInputLayoutPrice.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        imm.toggleSoftInput(0, 0);
     }
 
     private void closeDialog() {

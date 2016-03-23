@@ -72,8 +72,9 @@ public class Product implements Parcelable {
 
     public Cost getFirstCost() {
         if (costList.size() <= 0)
-            costList.add(new Cost());
-        return costList.get(0);
+            return new Cost();
+        else
+            return costList.get(0);
     }
 
     public void setFirstCost(Cost cost) {

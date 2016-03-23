@@ -50,7 +50,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
     private static final String ADD_DESCRIPTION = "addDescription";
     private static final String ADD_COST = "addCost";
 
-    private static final String DATE_FORMAT = "dd MMMM yyyy г.   HH:mm Z";
+    private static final String DATE_FORMAT = "dd MMMM yyyy г.   HH:mm";
 
     //private Toolbar mToolbar;
     private TextView mTextViewSave;
@@ -256,7 +256,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
     }
 
     private void goUpdateCost(Cost cost) {
-        if (mProduct.getId() > 0 || addProductInDB()){
+        if (mProduct.getId() > 0 || addProductInDB()) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             Fragment prevDialog = getFragmentManager().findFragmentByTag(ADD_COST);
             if (prevDialog != null) {
@@ -265,7 +265,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
 
             EditCostDialog dialogFragment = EditCostDialog.newInstance(cost, getTag());
             dialogFragment.show(ft, ADD_COST);
-        }else {
+        } else {
             showSnackBarMessage("Введите имя товара!");
         }
     }
@@ -280,7 +280,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    private boolean addProductInDB(){
+    private boolean addProductInDB() {
         String brand = mEditTextNameProduct.getText().toString();
         if (!TextUtils.isEmpty(brand)) {
             mProduct.setBrand(brand);
@@ -294,7 +294,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
             if (id > 0) {
                 mProduct.setId(id);
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } else {
@@ -406,8 +406,11 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
                         ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.VISIBLE);
                         //TODO: тут добавить загрузку картинки
                     }
+
+                    String str = String.format("%1.2f", item.getPriceFromUnit()).replace(",", ".");
+
                     ((ViewHolderProduct) viewHolder).textViewPrice.setText(item.getPrice() + " за " + item.getVolume() + " " + item.getUnits().getShortName());
-                    ((ViewHolderProduct) viewHolder).textViewPriceFromUnit.setText(item.getPriceFromUnit() + " за 1 " + item.getUnits().getShortName());
+                    ((ViewHolderProduct) viewHolder).textViewPriceFromUnit.setText(str + " за 1 " + item.getUnits().getShortName());
 
                     ((ViewHolderProduct) viewHolder).textViewDate.setText(DateUtil.getStringDateForMask(item.getDate(), DATE_FORMAT));
 

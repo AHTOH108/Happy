@@ -24,6 +24,7 @@ import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -224,8 +225,8 @@ public class ProductListFragment extends Fragment {
                             ((ViewHolderProduct) viewHolder).textViewNameShop.setVisibility(View.VISIBLE);
                             ((ViewHolderProduct) viewHolder).textViewNameShop.setText(cost.getShop().getName());
                         }
-                        ((ViewHolderProduct) viewHolder).textViewPrice.setText(String.valueOf(cost.getPrice()));
-                        ((ViewHolderProduct) viewHolder).textViewUnits.setText(cost.getUnits().getName());
+                        ((ViewHolderProduct) viewHolder).textViewPrice.setText(StringUtils.getPriceRub(item.getFirstCost().getPriceFromUnit()));
+                        ((ViewHolderProduct) viewHolder).textViewUnits.setText(StringUtils.getForUnits(1, cost.getUnits()));
                     } else {
                         ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.GONE);
                         ((ViewHolderProduct) viewHolder).textViewNameShop.setVisibility(View.INVISIBLE);

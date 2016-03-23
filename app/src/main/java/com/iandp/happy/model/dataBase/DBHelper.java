@@ -169,6 +169,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 item.setBrand(cursor.getString(brandColIndex));
                 item.setDescription(cursor.getString(descriptionColIndex));
                 item.setRating(cursor.getInt(ratingColIndex));
+                item.setCostList(getListCost(item.getId()));
                 listProduct.add(item);
             } while (cursor.moveToNext());
         }
@@ -385,10 +386,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_COST, null, KEY_ID_PRODUCT + "=?",
                 new String[]{String.valueOf(idProduct)},
                 null, null, KEY_DATE + " DESC");
-        /*Cursor cursor = db.query(TABLE_COST,
-                new String[]{KEY_ID, KEY_ID_PRODUCT, KEY_ID_SHOP, KEY_PRICE, KEY_PRICE_MAX, KEY_DATE, KEY_VOLUME, KEY_UNITS},
-                KEY_ID_PRODUCT + "=?",
-                new String[]{String.valueOf(idProduct)}, null, null, null, null);*/
 
         if (cursor != null) {
             int idColIndex = cursor.getColumnIndex(KEY_ID);
@@ -406,7 +403,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     item.setPrice(cursor.getDouble(priceColIndex));
                     item.setPriceMax(cursor.getDouble(priceMaxColIndex));
                     item.setDate(cursor.getLong(dateColIndex));
-                    item.setVolume(cursor.getInt(volumeColIndex));
+                    item.setVolume(cursor.getDouble(volumeColIndex));
                     item.setUnits(new Units(cursor.getInt(unitsColIndex)));
                     item.setShop(getShop(cursor.getInt(idShopColIndex)));
 
