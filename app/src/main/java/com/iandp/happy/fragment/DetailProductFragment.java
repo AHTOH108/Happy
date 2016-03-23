@@ -25,12 +25,14 @@ import com.iandp.happy.R;
 import com.iandp.happy.activity.ProductDetailActivity;
 import com.iandp.happy.adapters.SpinnerAdapter;
 import com.iandp.happy.dialogs.EditCategoryDialog;
+import com.iandp.happy.dialogs.EditCostDialog;
 import com.iandp.happy.dialogs.EditTextDialog;
 import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Image;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.utils.DateUtil;
 
 import java.util.ArrayList;
 
@@ -39,12 +41,16 @@ import java.util.ArrayList;
  */
 public class DetailProductFragment extends BaseFragment implements View.OnClickListener,
         EditCategoryDialog.OnConfirmEditCategoryListener,
-        EditTextDialog.OnConfirmEditListener {
+        EditTextDialog.OnConfirmEditListener,
+        EditCostDialog.OnConfirmEditCostListener {
 
     private static final String ARG_ID_PRODUCT = "idProduct";
 
     private static final String ADD_CATEGORY = "addCategory";
     private static final String ADD_DESCRIPTION = "addDescription";
+    private static final String ADD_COST = "addCost";
+
+    private static final String DATE_FORMAT = "dd MMMM yyyy г.   HH:mm Z";
 
     //private Toolbar mToolbar;
     private TextView mTextViewSave;
@@ -129,7 +135,8 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
     }
 
     private void selectCategory(long idCategory) {
-        if (mSpinnerCategory == null || adapterCategory == null || mListCategory == null || idCategory < 0) return;
+        if (mSpinnerCategory == null || adapterCategory == null || mListCategory == null || idCategory < 0)
+            return;
         for (int i = 0; i < mListCategory.size(); i++)
             if (mListCategory.get(i).getId() == idCategory) {
                 if (mSpinnerCategory.getCount() > i) {
@@ -193,7 +200,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
         }
     }
 
-    private void showListCost(ArrayList<Cost> list){
+    private void showListCost(ArrayList<Cost> list) {
         mAdapter.updateListCar(list);
     }
 
@@ -201,22 +208,22 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
         selectCategory(product.getCategoryProduct().getId());
         mEditTextNameProduct.setText(product.getBrand());
         showDescription(product.getDescription());
-        if (product.getImageList().size() > 0){
+        if (product.getImageList().size() > 0) {
             showPhoto(product.getImageList().get(0));
         }
 
         showListCost(mProduct.getCostList());
     }
 
-    private void showDescription(String text){
-        if (mTextViewDescription != null){
+    private void showDescription(String text) {
+        if (mTextViewDescription != null) {
             if (TextUtils.isEmpty(text))
                 text = "описание отсутствует";
             mTextViewDescription.setText(text);
         }
     }
 
-    private void showPhoto(Image image){
+    private void showPhoto(Image image) {
         // TODO: добавить отображение фото продукта
     }
 
@@ -248,31 +255,50 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
 
     }
 
-    private void goAddNewCost() {
-        Toast.makeText(getActivity(), "goAddNewCost", Toast.LENGTH_SHORT).show();
-    }
-
-    private void goUpdateCost(int idCost) {
-        Toast.makeText(getActivity(), "goUpdateCost", Toast.LENGTH_SHORT).show();
-    }
-
-    private void onSaveProduct(){
-        String brand = mEditTextNameProduct.getText().toString();
-        if (!TextUtils.isEmpty(brand)){
-            mProduct.setBrand(brand);
-            int k = mSpinnerCategory.getSelectedItemPosition();
-            if (k < mListCategory.size()){
-                mProduct.setCategoryProduct(mListCategory.get(k));
-            }else{
-                showSnackBarMessage("Категория некорректна");
+    private void goUpdateCost(Cost cost) {
+        if (mProduct.getId() > 0 || addProductInDB()){
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prevDialog = getFragmentManager().findFragmentByTag(ADD_COST);
+            if (prevDialog != null) {
+                ft.remove(prevDialog);
             }
 
-            dbHelper.addNewProduct(mProduct);
+            EditCostDialog dialogFragment = EditCostDialog.newInstance(cost, getTag());
+            dialogFragment.show(ft, ADD_COST);
+        }else {
+            showSnackBarMessage("Введите имя товара!");
+        }
+    }
+
+    private void onSaveProduct() {
+        if (addProductInDB()) {
             if (ProductDetailActivity.class.isInstance(getActivity())) {
                 ((ProductDetailActivity) getActivity()).finishActivity(true);
             }
-        }else{
+        } else {
             showSnackBarMessage("Введите имя товара!");
+        }
+    }
+
+    private boolean addProductInDB(){
+        String brand = mEditTextNameProduct.getText().toString();
+        if (!TextUtils.isEmpty(brand)) {
+            mProduct.setBrand(brand);
+            int k = mSpinnerCategory.getSelectedItemPosition();
+            if (k < mListCategory.size()) {
+                mProduct.setCategoryProduct(mListCategory.get(k));
+            } else {
+                return false;
+            }
+            long id = dbHelper.addNewProduct(mProduct);
+            if (id > 0) {
+                mProduct.setId(id);
+                return true;
+            }else{
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -286,10 +312,21 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public void onConfirmEditListener(String string) {
-        if (mTextViewDescription != null){
+        if (mTextViewDescription != null) {
             mTextViewDescription.setText(string);
             mProduct.setDescription(string);
         }
+    }
+
+    @Override
+    public void onConfirmEditCostListener(Cost cost) {
+        if (mProduct.getId() <= 0) {
+            showSnackBarMessage("Ошибка сохранения: Товар не добавлен в базу!");
+        } else {
+            dbHelper.addCost(cost, mProduct.getId());
+        }
+        loadProduct();
+        showListCost(mProduct.getCostList());
     }
 
 
@@ -352,7 +389,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
                         viewHolder.view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                goAddNewCost();
+                                goUpdateCost(null);
                             }
                         });
                     }
@@ -363,16 +400,22 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
 
                     ((ViewHolderProduct) viewHolder).textViewNameShop.setText(item.getShop().getName());
 
+                    if (TextUtils.isEmpty(item.getShop().getImage().getPath())) {
+                        ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.GONE);
+                    } else {
+                        ((ViewHolderProduct) viewHolder).imageViewLogoShop.setVisibility(View.VISIBLE);
+                        //TODO: тут добавить загрузку картинки
+                    }
                     ((ViewHolderProduct) viewHolder).textViewPrice.setText(item.getPrice() + " за " + item.getVolume() + " " + item.getUnits().getShortName());
                     ((ViewHolderProduct) viewHolder).textViewPriceFromUnit.setText(item.getPriceFromUnit() + " за 1 " + item.getUnits().getShortName());
 
-                    ((ViewHolderProduct) viewHolder).textViewDate.setText(String.valueOf(item.getDate()));
+                    ((ViewHolderProduct) viewHolder).textViewDate.setText(DateUtil.getStringDateForMask(item.getDate(), DATE_FORMAT));
 
-                    ((ViewHolderProduct) viewHolder).buttonUpdate.setTag(item.getId());
+                    ((ViewHolderProduct) viewHolder).buttonUpdate.setTag(item);
                     ((ViewHolderProduct) viewHolder).buttonUpdate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            goUpdateCost((int) v.getTag());
+                            goUpdateCost((Cost) v.getTag());
                         }
                     });
 

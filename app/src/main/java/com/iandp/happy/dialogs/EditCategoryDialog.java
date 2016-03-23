@@ -24,7 +24,7 @@ import com.iandp.happy.model.object.CategoryProduct;
 public class EditCategoryDialog extends AppCompatDialogFragment {
 
     private static final String CATEGORY_PRODUCT = "categoryProduct";
-    private static final String TAG_PARENT_FRAGMENT = "BirthdayDialogFragment";
+    private static final String TAG_PARENT_FRAGMENT = "tagParentFragment";
 
     private TextInputLayout textInputLayoutCategory;
     private EditText editTextCategory;

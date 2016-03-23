@@ -35,7 +35,7 @@ import java.util.Calendar;
 public class EditProductCalculatorDialog extends AppCompatDialogFragment implements View.OnClickListener {
 
     private static final String PRODUCT = "product";
-    private static final String TAG_PARENT_FRAGMENT = "BirthdayDialogFragment";
+    private static final String TAG_PARENT_FRAGMENT = "tagParentFragment";
 
     private TextView textViewCategoryProduct;
     private EditText editTextBrand;

@@ -151,7 +151,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Product> getAllProduct() {
         ArrayList<Product> listProduct = new ArrayList<>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PRODUCT, null, null, null, null, null, KEY_ID + " DESC");
 
         // определяем номера столбцов по имени в выборке
@@ -276,7 +276,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<CategoryProduct> getAllCategoryProduct() {
         ArrayList<CategoryProduct> listCategoryProduct = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CATEGORY_PRODUCT, null, null, null, null, null, KEY_NAME);
         if (cursor.moveToFirst()) {
             int idColIndex = cursor.getColumnIndex(KEY_ID);
@@ -381,11 +381,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Cost> getListCost(long idProduct) {
         ArrayList<Cost> listCost = new ArrayList<>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(TABLE_COST,
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COST, null, KEY_ID_PRODUCT + "=?",
+                new String[]{String.valueOf(idProduct)},
+                null, null, KEY_DATE + " DESC");
+        /*Cursor cursor = db.query(TABLE_COST,
                 new String[]{KEY_ID, KEY_ID_PRODUCT, KEY_ID_SHOP, KEY_PRICE, KEY_PRICE_MAX, KEY_DATE, KEY_VOLUME, KEY_UNITS},
                 KEY_ID_PRODUCT + "=?",
-                new String[]{String.valueOf(idProduct)}, null, null, null, null);
+                new String[]{String.valueOf(idProduct)}, null, null, null, null);*/
 
         if (cursor != null) {
             int idColIndex = cursor.getColumnIndex(KEY_ID);
@@ -402,7 +405,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     item.setId(cursor.getLong(idColIndex));
                     item.setPrice(cursor.getDouble(priceColIndex));
                     item.setPriceMax(cursor.getDouble(priceMaxColIndex));
-                    item.setDate(cursor.getInt(dateColIndex));
+                    item.setDate(cursor.getLong(dateColIndex));
                     item.setVolume(cursor.getInt(volumeColIndex));
                     item.setUnits(new Units(cursor.getInt(unitsColIndex)));
                     item.setShop(getShop(cursor.getInt(idShopColIndex)));
