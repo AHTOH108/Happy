@@ -1,7 +1,6 @@
 package com.iandp.happy.dialogs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,13 +17,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.iandp.happy.R;
+import com.iandp.happy.customViews.SpinnerShops;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 import com.iandp.happy.model.object.Shop;
 import com.iandp.happy.model.object.Units;
+import com.iandp.happy.utils.DateUtil;
+import com.iandp.happy.utils.GuiUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created on 21.11.2015.
@@ -42,7 +42,7 @@ public class EditProductCalculatorDialog extends AppCompatDialogFragment impleme
     private EditText editTextPrice;
     private EditText editTextVolume;
     private Spinner spinnerUnits;
-    private Spinner spinnerShop;
+    private SpinnerShops mySpinnerShop;
     private ImageView labelErrorPrice;
     private ImageView labelErrorVolume;
 
@@ -115,7 +115,8 @@ public class EditProductCalculatorDialog extends AppCompatDialogFragment impleme
 
         switch (v.getId()) {
             case R.id.imageButtonClose:
-                closeKeyboard();
+                //closeKeyboard();
+                GuiUtil.closeKeyboard(getActivity(), editTextBrand);
                 this.dismiss();
                 break;
             case R.id.buttonApply:
@@ -137,9 +138,9 @@ public class EditProductCalculatorDialog extends AppCompatDialogFragment impleme
         textInputLayoutBrand = (TextInputLayout) view.findViewById(R.id.textInputLayoutBrand);
         textInputLayoutPrice = (TextInputLayout) view.findViewById(R.id.textInputLayoutPrice);
         textInputLayoutVolume = (TextInputLayout) view.findViewById(R.id.textInputLayoutVolume);
-        spinnerShop= (Spinner) view.findViewById(R.id.spinnerShop);
-        labelErrorPrice= (ImageView) view.findViewById(R.id.labelErrorPrice);
-        labelErrorVolume= (ImageView) view.findViewById(R.id.labelErrorVolume);
+        mySpinnerShop = (SpinnerShops) view.findViewById(R.id.mySpinnerShop);
+        labelErrorPrice = (ImageView) view.findViewById(R.id.labelErrorPrice);
+        labelErrorVolume = (ImageView) view.findViewById(R.id.labelErrorVolume);
 
         editTextPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -194,14 +195,15 @@ public class EditProductCalculatorDialog extends AppCompatDialogFragment impleme
                 price = -1;
                 volume = -1;
             }
-            Shop shopSelect = new Shop();
+            Shop shopSelect = mySpinnerShop.getSelectedShop();
 
-            Cost cost = new Cost(Calendar.getInstance().getTimeInMillis(), price, volume, units, shopSelect);
+            Cost cost = new Cost(DateUtil.getNowTime(), price, volume, units, shopSelect);
 
             mProduct.setBrand(brand);
             mProduct.setFirstCost(cost);
 
-            closeKeyboard();
+            //closeKeyboard();
+            GuiUtil.closeKeyboard(getActivity(), editTextBrand);
             mOnConfirmListener.onConfirmEditProductListener(mProduct);
             this.dismiss();
         }
@@ -262,26 +264,27 @@ public class EditProductCalculatorDialog extends AppCompatDialogFragment impleme
 
     private void showInfoProduct(Product product) {
         if (product == null) return;
+        try {
 
-        mProduct = product;
-        textViewCategoryProduct.setText(mProduct.getCategoryProduct().getName());
-        editTextBrand.setText(mProduct.getBrand());
-        Cost cost = mProduct.getFirstCost();
-        editTextPrice.setText(String.valueOf(cost.getPrice()));
-        editTextVolume.setText(String.valueOf(cost.getVolume()));
-        String nameShop = cost.getShop().getName();
-        if (TextUtils.isEmpty(nameShop))
-            nameShop = getString(R.string.select_shop);
-        //textViewShop.setText(nameShop);
 
-        for (int i = 0; i < listUnits.size(); i++)
-            if (cost.getUnits().getId() == listUnits.get(i).getId())
-                spinnerUnits.setSelection(i);
-        editTextBrand.requestFocus();
+            mProduct = product;
+            textViewCategoryProduct.setText(mProduct.getCategoryProduct().getName());
+            editTextBrand.setText(mProduct.getBrand());
+            Cost cost = mProduct.getFirstCost();
+            editTextPrice.setText(String.valueOf(cost.getPrice()));
+            editTextVolume.setText(String.valueOf(cost.getVolume()));
+            mySpinnerShop.setSelectedShop(cost.getShop().getId());
+
+            for (int i = 0; i < listUnits.size(); i++)
+                if (cost.getUnits().getId() == listUnits.get(i).getId())
+                    spinnerUnits.setSelection(i);
+            editTextBrand.requestFocus();
+        }catch (NullPointerException ignored){
+        }
     }
 
-    private void closeKeyboard() {
+   /* private void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(textViewCategoryProduct.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
+    }*/
 }

@@ -162,12 +162,11 @@
 
             </RelativeLayout>
 
-            <Spinner
-                android:id="@+id/spinnerShop"
-                android:layout_marginTop="8dp"
+            <com.iandp.happy.customViews.SpinnerShops
+                android:id="@+id/mySpinnerShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.AppCompat.Spinner.Underlined"/>
+                android:minHeight="20dp"/>
 
             <Button
                 android:id="@+id/buttonApply"

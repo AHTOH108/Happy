@@ -295,7 +295,7 @@ public class DetailProductFragment extends BaseFragment implements View.OnClickL
                 mProduct.setId(id);
                 return true;
             } else {
-                return false;
+                return true;
             }
         } else {
             return false;

@@ -1,9 +1,7 @@
 package com.iandp.happy.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
-import com.iandp.happy.activity.RedactProductCalculatorActivity;
 import com.iandp.happy.dialogs.EditProductCalculatorDialog;
 import com.iandp.happy.model.dataBase.DBHelper;
 import com.iandp.happy.model.object.CategoryProduct;
@@ -29,41 +26,41 @@ import com.iandp.happy.model.object.Product;
 import java.util.ArrayList;
 
 
-public class CalculatorFragment extends Fragment implements EditProductCalculatorDialog.OnConfirmEditProductListener {
+public class CalculatorFragment extends BaseFragment implements EditProductCalculatorDialog.OnConfirmEditProductListener {
 
     protected static final String REDACT_PRODUCT_CALCULATOR = "redactProductCalculator";
     protected static final String LIST_POSITION_REDACT = "listPositionRedact";
     protected static final String LIST_PRODUCT = "listProduct";
-    protected static final int OK_REDACT_PRODUCT_CALCULATOR = 11;
-    protected static final int OK_ADD_PRODUCT_CALCULATOR = 12;
 
     private EditText editTextSearchCategory;
-    private Button buttonSelectExist;
+    private Button buttonAddCategory;
     private RecyclerView recyclerViewProducts;
 
     private RecyclerViewAdapter rVAdapter;
 
     private ArrayList<Product> listProduct = new ArrayList<>();
+    private ArrayList<CategoryProduct> listCategory = new ArrayList<>();
+    private CategoryProduct currentCategory;
 
     private DBHelper dbHelper;
 
     private int listPositionRedact = -1;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rVAdapter = new RecyclerViewAdapter(getActivity());
+    protected int getLayoutId() {
+        return R.layout.fragment_calculator;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calculator, container, false);
-
-        dbHelper = new DBHelper(getContext());
-        setupView(view);
-        loadInstanceState(savedInstanceState);
-        return view;
+    protected void setupView(View view) {
+        editTextSearchCategory = (EditText) view.findViewById(R.id.editTextSearchCategory);
+        buttonAddCategory = (Button) view.findViewById(R.id.buttonAddCategory);
+        recyclerViewProducts = (RecyclerView) view.findViewById(R.id.recyclerViewProducts);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+        rVAdapter = new RecyclerViewAdapter(getActivity());
+        recyclerViewProducts.setAdapter(rVAdapter);
+        recyclerViewProducts.setLayoutManager(layoutManager);
+        rVAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -74,57 +71,15 @@ public class CalculatorFragment extends Fragment implements EditProductCalculato
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO: Потом удалить это т.к. не используем ( + Удалить активити которая отвечает за это)
-        if (resultCode == Activity.RESULT_OK) {
+    protected void loadInstanceState(Bundle savedInstanceState) {
+        dbHelper = new DBHelper(getContext());
 
-            if (requestCode == OK_REDACT_PRODUCT_CALCULATOR) {
-
-                if (data != null) {
-                    Product product = data.getParcelableExtra(RedactProductCalculatorActivity.REDACT_PRODUCT);
-                    if (listPositionRedact >= 0 && listProduct.size() > listPositionRedact) {
-                        listProduct.set(listPositionRedact, product);
-                        rVAdapter.notifyDataSetChanged();
-                        listPositionRedact = -1;
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.error), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            if (requestCode == OK_ADD_PRODUCT_CALCULATOR) {
-
-                if (data != null) {
-                    Product product = data.getParcelableExtra(RedactProductCalculatorActivity.REDACT_PRODUCT);
-                    product.getCategoryProduct().setName(product.getBrand());
-
-                    //long id = new ProductApi(getActivity()).addProduct(product);
-                    //long id = dbHelper.addNewProduct(product);
-                    listProduct.add(product);
-                    rVAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    }
-
-    private void setupView(View view) {
-        editTextSearchCategory = (EditText) view.findViewById(R.id.editTextSearchCategory);
-        buttonSelectExist = (Button) view.findViewById(R.id.buttonSelectExist);
-        recyclerViewProducts = (RecyclerView) view.findViewById(R.id.recyclerViewProducts);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
-        recyclerViewProducts.setAdapter(rVAdapter);
-        recyclerViewProducts.setLayoutManager(layoutManager);
-        rVAdapter.notifyDataSetChanged();
-    }
-
-    private void loadInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             listPositionRedact = savedInstanceState.getInt(LIST_POSITION_REDACT);
             listProduct = savedInstanceState.getParcelableArrayList(LIST_PRODUCT);
         } else {
             listPositionRedact = -1;
             listProduct = new ArrayList<>();
-
             //listProduct = dbHelper.getAllProduct();
         }
         if (rVAdapter != null)
@@ -151,6 +106,43 @@ public class CalculatorFragment extends Fragment implements EditProductCalculato
         }
     }
 
+    private void goAddProduct() {
+        Product product = new Product();
+        product.setCategoryProduct(currentCategory);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
+        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
+
+    }
+
+    private void goRedactProduct(Product product, int position) {
+        listPositionRedact = position;
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
+        if (prevDialog != null) {
+            ft.remove(prevDialog);
+        }
+
+        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
+        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
+
+    }
+
+    private void goSelectCategory(CategoryProduct category) {
+
+    }
+
+    /**
+     * *****************************************
+     * *****************Adapter*****************
+     * *****************************************
+     */
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -158,7 +150,7 @@ public class CalculatorFragment extends Fragment implements EditProductCalculato
         private static final int TYPE_ITEM = 1;
         private static final int TYPE_SPINNER = 2;
 
-        LayoutInflater lInflater;
+        private LayoutInflater lInflater;
 
         public RecyclerViewAdapter(Context context) {
             lInflater = LayoutInflater.from(context);
@@ -284,55 +276,88 @@ public class CalculatorFragment extends Fragment implements EditProductCalculato
         }
     }
 
-    private void goAddProduct() {
-        Product product = new Product();
-        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
-        if (prevDialog != null) {
-            ft.remove(prevDialog);
+    /**
+     * *****************************************
+     * *****************Adapter*****************
+     * *****************************************
+     */
+
+    public class RecyclerViewCategoryAdapter extends RecyclerView.Adapter<RecyclerViewCategoryAdapter.ViewHolder> {
+
+        private static final int TYPE_ITEM = 1;
+        private static final int TYPE_NULL = 2;
+
+        private LayoutInflater lInflater;
+
+        private ArrayList<CategoryProduct> listItem = new ArrayList<>();
+
+        public RecyclerViewCategoryAdapter(Context context) {
+            lInflater = LayoutInflater.from(context);
         }
 
-        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
-        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
-
-
-        /*Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
-        Product product = new Product();
-        product.setCategoryProduct(new CategoryProduct(editTextSearchCategory.getText().toString()));
-        intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
-        startActivityForResult(intent, OK_ADD_PRODUCT_CALCULATOR);*/
-
-
-        /*ContentValues cv = new ContentValues();
-
-        SQLiteDatabase db = dbHelper_2.getWritableDatabase();
-        // получаем данные из полей ввода
-        String name = "Test 1";
-        String email = "Test_2";
-
-        cv.put("name", name);
-        cv.put("email", email);
-        // вставляем запись и получаем ее ID
-        long rowID = db.insert("mytable", null, cv);
-        dbHelper_2.close();*/
-    }
-
-    private void goRedactProduct(Product product, int position) {
-        listPositionRedact = position;
-        /*Intent intent = new Intent(getActivity(), RedactProductCalculatorActivity.class);
-        intent.putExtra(RedactProductCalculatorActivity.REDACT_PRODUCT, product);
-        startActivityForResult(intent, OK_REDACT_PRODUCT_CALCULATOR);*/
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prevDialog = getFragmentManager().findFragmentByTag(REDACT_PRODUCT_CALCULATOR);
-        if (prevDialog != null) {
-            ft.remove(prevDialog);
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case TYPE_ITEM:
+                    return new ViewHolder(lInflater.inflate(R.layout.item_list_string, parent, false));
+                default:
+                    return new ViewHolder(lInflater.inflate(R.layout.item_list_string, parent, false));
+            }
         }
 
-        EditProductCalculatorDialog dialogFragment = EditProductCalculatorDialog.newInstance(product, getTag());
-        dialogFragment.show(ft, REDACT_PRODUCT_CALCULATOR);
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            int type = getItemViewType(position);
+            switch (type) {
+                case TYPE_ITEM:
+                    CategoryProduct item = getItem(position);
+                    viewHolder.view.setTag(item);
+                    viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goSelectCategory((CategoryProduct) v.getTag());
+                        }
+                    });
+                    viewHolder.textView.setText(item.getName());
+                    break;
+                case TYPE_NULL:
+                    viewHolder.view.setOnClickListener(null);
+                    viewHolder.textView.setText("Список категорий пуст");
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        @Override
+        public int getItemCount() {
+            return listItem.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (listProduct.size() > position && position >= 0)
+                return TYPE_ITEM;
+            else
+                return TYPE_NULL;
+        }
+
+        public CategoryProduct getItem(int position) {
+            if (listItem.size() > position)
+                return listItem.get(position);
+            else
+                return new CategoryProduct();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            public View view;
+            public TextView textView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                view = itemView;
+                textView = (TextView) itemView.findViewById(R.id.textView);
+            }
+        }
     }
-
 }

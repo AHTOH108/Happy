@@ -68,6 +68,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:layout_marginTop="8dp"
+                    android:imeOptions="actionDone"
                     android:hint="@string/name_product"
                     android:inputType="textPersonName"
                     android:singleLine="true"

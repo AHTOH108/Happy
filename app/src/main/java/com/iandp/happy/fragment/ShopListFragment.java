@@ -16,14 +16,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iandp.happy.R;
-import com.iandp.happy.activity.RedactProductCalculatorActivity;
 import com.iandp.happy.activity.ShopDetailActivity;
 import com.iandp.happy.model.dataBase.DBHelper;
-import com.iandp.happy.model.object.CategoryProduct;
-import com.iandp.happy.model.object.Product;
 import com.iandp.happy.model.object.Shop;
 
 import java.util.ArrayList;

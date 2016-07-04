@@ -24,6 +24,7 @@ import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Shop;
 import com.iandp.happy.model.object.Units;
 import com.iandp.happy.utils.DateUtil;
+import com.iandp.happy.utils.GuiUtil;
 
 import java.util.ArrayList;
 
@@ -89,21 +90,21 @@ public class EditCostDialog extends AppCompatDialogFragment {
 
     @Override
     public void onDetach() {
+        GuiUtil.closeKeyboard(getActivity(), mEditTextPrice);
         super.onDetach();
         mOnConfirmListener = null;
     }
 
     @Override
     public void onStop() {
+        GuiUtil.closeKeyboard(getActivity(), mEditTextPrice);
         super.onStop();
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        closeKeyboard();
-        closeKeyboard();
+        GuiUtil.closeKeyboard(getActivity(), mEditTextPrice);
         super.onDismiss(dialog);
-        closeKeyboard();
     }
 
     @NonNull
@@ -235,11 +236,12 @@ public class EditCostDialog extends AppCompatDialogFragment {
             if (listUnits.size() > k)
                 mCost.setUnits(listUnits.get(k));
             k = mSpinnerShop.getSelectedItemPosition();
-            if (listShop.size() > k)
+            if (k >= 0 && listShop.size() > k)
                 mCost.setShop(listShop.get(k));
             mCost.setDate(DateUtil.getNowTime());
 
             mOnConfirmListener.onConfirmEditCostListener(mCost);
+            GuiUtil.closeKeyboard(getActivity(), mEditTextPrice);
             this.dismiss();
         }
     }
@@ -285,10 +287,10 @@ public class EditCostDialog extends AppCompatDialogFragment {
         return !error;
     }
 
-    private void closeKeyboard() {
+    /*private void closeKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mButtonCancel.getWindowToken(), 0);
-    }
+    }*/
 
     private void openKeyboard() {
         /*InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

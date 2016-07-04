@@ -531,6 +531,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Shop getShop(long id) {
+        if (id < 0) return new Shop();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SHOP,
                 new String[]{KEY_ID, KEY_NAME, KEY_ID_LOGO, KEY_LATITUDE, KEY_LONGITUDE, KEY_ADDRESS},

@@ -30,7 +30,7 @@
             android:layout_weight="0.2"
             android:layout_height="match_parent"
             android:text="O"
-            android:id="@+id/buttonSelectExist" />
+            android:id="@+id/buttonAddCategory" />
     </LinearLayout>
 
     <RelativeLayout
