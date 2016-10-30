@@ -29,21 +29,23 @@ public class Main {
         Entity shop = addShop(schema);
 
         Property categoryIdForProduct = product.addLongProperty("categoryId").notNull().getProperty();
-        Property costIdForProduct = product.addLongProperty("coastId").notNull().getProperty();
+        Property shopIdForCost = cost.addLongProperty("shopId").notNull().getProperty();
         Property productIdForImage = image.addLongProperty("productId").notNull().getProperty();
-        Property costIdForShop = shop.addLongProperty("costId").notNull().getProperty();
-        Property shopIdForImage = image.addLongProperty("shopId").notNull().getProperty();
+        Property productIdForCost = cost.addLongProperty("productId").notNull().getProperty();
+        Property imageIdForShop = shop.addLongProperty("imageId").notNull().getProperty();
+        //Property shopIdForImage = image.addLongProperty("shopId").notNull().getProperty();
 
         product.addToOne(categoryProduct, categoryIdForProduct, "categoryProduct");
-        cost.addToOne(shop, costIdForProduct, "cost");
+        cost.addToOne(shop, shopIdForCost, "shop");
+        shop.addToOne(image, imageIdForShop, "image");
 
         ToMany productToImage = product.addToMany(image, productIdForImage);
-        ToMany productToCost = product.addToMany(cost, costIdForShop);
-        ToMany shopToImage = shop.addToMany(image, shopIdForImage);
+        ToMany productToCost = product.addToMany(cost, productIdForCost);
+        //ToMany shopToImage = shop.addToMany(image, shopIdForImage);
 
         productToImage.setName("images");
         productToCost.setName("costs");
-        shopToImage.setName("images");
+        //shopToImage.setName("images");
     }
 
     /**
@@ -108,9 +110,10 @@ public class Main {
     private static Entity addShop(Schema schema) {
         Entity entity = schema.addEntity("DBShop");
         entity.addIdProperty().primaryKey().autoincrement();
-        entity.addStringProperty("brand");
-        entity.addStringProperty("description");
-        entity.addByteProperty("rating");
+        entity.addStringProperty("name");
+        entity.addDoubleProperty("latitude");
+        entity.addDoubleProperty("longitude");
+        entity.addStringProperty("address");
         return entity;
     }
 }
