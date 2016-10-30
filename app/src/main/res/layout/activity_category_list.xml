@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.iandp.happy.activity.CategoryListActivity">
 
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"

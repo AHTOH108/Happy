@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#089402</color>
-    <color name="color_primary_dark">#20701c</color>
+    <color name="color_primary">#049fd4</color>
+    <color name="color_primary_dark">#0087c1</color>
     <color name="color_accent">@color/color_light_green</color>
     <color name="navigation_bar_color">#353535</color>
     <color name="window_background">@color/color_white</color>
-    <color name="text_color_primary">#19201b</color>
+    <color name="text_color_primary">#00121f</color>
 
     <color name="toolbar_background">#f1f1f1</color>
 
@@ -14,7 +14,7 @@
     <color name="color_anthracite">#647c62</color>
     <color name="color_white_smoky">#ffededed</color>
 
-    <color name="color_light_green">#1c8c29</color>
+    <color name="color_light_green">#00c1cf</color>
 
     <color name="color_white">#ffffffff</color>
     <color name="color_black">#000000</color>

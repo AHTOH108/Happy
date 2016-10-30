@@ -15,7 +15,7 @@ import com.iandp.happy.model.object.Units;
 
 import java.util.ArrayList;
 
-
+// TODO: Delete this class in future
 public class DBHelper extends SQLiteOpenHelper {
 
     //private static final int DATABASE_VERSION = 1;
