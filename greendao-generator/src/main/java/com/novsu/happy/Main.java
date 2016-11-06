@@ -27,6 +27,7 @@ public class Main {
         Entity categoryProduct = addCategoryProduct(schema);
         Entity cost = addCost(schema);
         Entity shop = addShop(schema);
+        addProductSimple(schema);
 
         Property categoryIdForProduct = product.addLongProperty("categoryId").notNull().getProperty();
         Property shopIdForCost = cost.addLongProperty("shopId").notNull().getProperty();
@@ -114,6 +115,21 @@ public class Main {
         entity.addDoubleProperty("latitude");
         entity.addDoubleProperty("longitude");
         entity.addStringProperty("address");
+        return entity;
+    }
+
+    /**
+     * Create productSimple Properties
+     *
+     * @return DBProductSimple entity
+     */
+    private static Entity addProductSimple(Schema schema) {
+        Entity entity = schema.addEntity("DBProductSimple");
+        entity.addIdProperty().primaryKey().autoincrement();
+        entity.addStringProperty("name");
+        entity.addDoubleProperty("price");
+        entity.addDoubleProperty("amount");
+        entity.addByteProperty("typeAmount");
         return entity;
     }
 }

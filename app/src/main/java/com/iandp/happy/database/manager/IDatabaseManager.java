@@ -1,7 +1,9 @@
 package com.iandp.happy.database.manager;
 
 import com.iandp.happy.database.DBProduct;
+import com.iandp.happy.database.DBProductSimple;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.model.object.ProductSimple;
 
 import java.util.ArrayList;
 
@@ -9,7 +11,7 @@ import java.util.ArrayList;
  * Created on 30.10.2016.
  */
 
-interface IDatabaseManager {
+public interface IDatabaseManager {
 
     /**
      * Closing available connections
@@ -20,6 +22,31 @@ interface IDatabaseManager {
      * Delete all tables and content from our database
      */
     void dropDatabase();
+
+    /**
+     * Insert a ProductSimple into the DB
+     *
+     * @param product to be inserted
+     *
+     * @return ProductSimple
+     */
+    ProductSimple insertProduct(ProductSimple product);
+
+    /**
+     * Remove a ProductSimple from the DB
+     *
+     * @param productId to be updated
+     */
+    void removeProductSimple(long productId);
+
+    /**
+     * List the ProductSimple from the DB
+     *
+     * @param lastId      ID of the last product on the page
+     * @param limit       Quantity items to return. If limit <= 0, then return all the items
+     * @return list of ProductSimple
+     */
+    ArrayList<ProductSimple> listProductSimple(int lastId, int limit);
 
     /**
      * Insert a product into the DB

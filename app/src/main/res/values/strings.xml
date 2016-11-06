@@ -42,6 +42,7 @@
 
     <string name="error">Неизвестная ошибка</string>
     <string name="error_edit_text">Данные некорректны</string>
+    <string name="error_data_field">Упс. Что-то неверно заполнено</string>
 
     <!-- Калькулятор -->
     <string name="calculator">Калькулятор</string>
@@ -53,6 +54,10 @@
     <string name="brand">Марка:</string>
     <string name="apply">Применить</string>
     <string name="select_shop">Укажите магазин</string>
+
+    <!-- Список покупок -->
+    <string name="amount_in_shopping">руб. (%1$.2f %2$s)</string>
+    <string name="price_for_one_product">%1$.2f руб. за 1 %2$s</string>
 
 
     <!-- Товары -->
@@ -91,6 +96,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="clear">Очистить</string>
 
     <!-- TEMP -->
 

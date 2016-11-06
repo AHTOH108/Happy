@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.iandp.happy.R;
-import com.iandp.happy.customViews.SpinnerShops;
+import com.iandp.happy.views.SpinnerShops;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Product;
 import com.iandp.happy.model.object.Shop;

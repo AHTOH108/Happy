@@ -8,10 +8,13 @@ import com.iandp.happy.database.DBCategoryProduct;
 import com.iandp.happy.database.DBCost;
 import com.iandp.happy.database.DBImage;
 import com.iandp.happy.database.DBProduct;
+import com.iandp.happy.database.DBProductSimple;
+import com.iandp.happy.database.DBProductSimpleDao;
 import com.iandp.happy.database.DBShop;
 import com.iandp.happy.database.DaoMaster;
 import com.iandp.happy.database.DaoSession;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.model.object.ProductSimple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import de.greenrobot.dao.async.AsyncOperation;
 import de.greenrobot.dao.async.AsyncOperationListener;
 import de.greenrobot.dao.async.AsyncSession;
+import de.greenrobot.dao.query.WhereCondition;
 
 /**
  * Created on 30.10.2016.
@@ -118,9 +122,82 @@ public class DatabaseManager implements IDatabaseManager, AsyncOperationListener
             asyncSession.deleteAll(DBImage.class);
             asyncSession.deleteAll(DBCost.class);
             asyncSession.deleteAll(DBShop.class);
+            asyncSession.deleteAll(DBProductSimple.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ProductSimple insertProduct(ProductSimple product) {
+        DBProductSimple dbProduct;
+        try {
+            if (product != null) {
+                dbProduct = TranslatorObjectDB.translateProductSimple(product);
+
+                openWritableDb();
+                DBProductSimpleDao productDao = daoSession.getDBProductSimpleDao();
+                if (dbProduct.getId() < 0){
+                    dbProduct.setId(null);
+                    product.setId(productDao.insert(dbProduct));
+                }else {
+                    DBProductSimple oldDBProduct = productDao.load(dbProduct.getId());
+                    if (oldDBProduct == null) {
+                        productDao.insert(dbProduct);
+                    } else {
+                        daoSession.update(dbProduct);
+                    }
+                }
+
+                daoSession.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return product;
+    }
+
+    @Override
+    public void removeProductSimple(long productId) {
+        try {
+            openReadableDb();
+            DBProductSimpleDao productDao = daoSession.getDBProductSimpleDao();
+            productDao.deleteByKey(productId);
+            daoSession.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ArrayList<ProductSimple> listProductSimple(int lastId, int limit) {
+        List<ProductSimple> listProduct = new ArrayList<>();
+        try {
+            openReadableDb();
+            DBProductSimpleDao productDao = daoSession.getDBProductSimpleDao();
+
+            List<DBProductSimple> listDBProduct;
+            if (limit > 0)
+                listDBProduct = productDao.queryBuilder()
+                        .orderDesc(DBProductSimpleDao.Properties.Id) // sort
+                        .where(DBProductSimpleDao.Properties.Id.gt(lastId))
+                        .limit(limit)
+                        .list();
+            else
+                listDBProduct = productDao.queryBuilder()
+                        .orderDesc(DBProductSimpleDao.Properties.Id) // sort
+                        .where(DBProductSimpleDao.Properties.Id.gt(lastId))
+                        .list();
+
+            for (DBProductSimple dbProduct : listDBProduct) {
+                listProduct.add(TranslatorObjectDB.translateDBProductSimple(dbProduct));
+            }
+            daoSession.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(listProduct);
     }
 
     @Override

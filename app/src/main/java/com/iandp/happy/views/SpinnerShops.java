@@ -1,4 +1,4 @@
-package com.iandp.happy.customViews;
+package com.iandp.happy.views;
 
 import android.app.Activity;
 import android.content.Context;

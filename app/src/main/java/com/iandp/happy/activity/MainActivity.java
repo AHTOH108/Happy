@@ -27,6 +27,7 @@ import com.iandp.happy.R;
 import com.iandp.happy.fragment.CalculatorFragment;
 import com.iandp.happy.fragment.ShopListFragment;
 import com.iandp.happy.fragment.ProductListFragment;
+import com.iandp.happy.fragment.ShoppingListFragment;
 import com.iandp.happy.temp.NavMenuItem;
 import com.iandp.happy.temp.TestFragment;
 
@@ -44,7 +45,7 @@ public class MainActivity extends BaseActivity {
     private static final int NAV_MENU_POSITION_TEST = 4;
     private static final int NAV_MENU_POSITION_ABOUT = 5;
 
-    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_PRODUCT;
+    private static final int START_NAV_MENU_POSITION = NAV_MENU_POSITION_SHOPPING_LIST;
 
     private static final String CURRENT_MENU_POSITION = "CurrentMenuPosition";
 
@@ -176,7 +177,7 @@ public class MainActivity extends BaseActivity {
                 fragmentNew = new ProductListFragment();
                 break;
             case NAV_MENU_POSITION_SHOPPING_LIST:
-                fragmentNew = new TestFragment();
+                fragmentNew = new ShoppingListFragment();
                 break;
             case NAV_MENU_POSITION_SHOP:
                 fragmentNew = new ShopListFragment();

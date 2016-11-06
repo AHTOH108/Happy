@@ -4,11 +4,13 @@ import com.iandp.happy.database.DBCategoryProduct;
 import com.iandp.happy.database.DBCost;
 import com.iandp.happy.database.DBImage;
 import com.iandp.happy.database.DBProduct;
+import com.iandp.happy.database.DBProductSimple;
 import com.iandp.happy.database.DBShop;
 import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Cost;
 import com.iandp.happy.model.object.Image;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.model.object.ProductSimple;
 import com.iandp.happy.model.object.Shop;
 
 import java.util.ArrayList;
@@ -19,6 +21,26 @@ import java.util.List;
  */
 
 public class TranslatorObjectDB {
+
+    public static ProductSimple translateDBProductSimple(DBProductSimple dbObject) {
+        ProductSimple object = new ProductSimple();
+        object.setId(dbObject.getId());
+        object.setName(dbObject.getName());
+        object.setPrice(dbObject.getPrice());
+        object.setAmount(dbObject.getAmount());
+        object.setTypeAmount(dbObject.getTypeAmount());
+        return object;
+    }
+
+    public static DBProductSimple translateProductSimple(ProductSimple object) {
+        DBProductSimple dbObject = new DBProductSimple();
+        dbObject.setId(object.getId());
+        dbObject.setName(object.getName());
+        dbObject.setPrice(object.getPrice());
+        dbObject.setAmount(object.getAmount());
+        dbObject.setTypeAmount(object.getTypeAmount());
+        return dbObject;
+    }
 
     public static Product translateDBProduct(DBProduct dbObject) {
         Product object = new Product();

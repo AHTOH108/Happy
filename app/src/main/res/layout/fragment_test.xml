@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:text="Тестовый фрагмент" />
 
-    <com.iandp.happy.customViews.SpinnerShops
+    <com.iandp.happy.views.SpinnerShops
         android:id="@+id/mySpinnerShop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="20dp">
 
-    </com.iandp.happy.customViews.SpinnerShops>
+    </com.iandp.happy.views.SpinnerShops>
 
     <Button
         android:id="@+id/button"

@@ -3,8 +3,8 @@ package com.iandp.happy.model.api;
 import android.content.Context;
 
 import com.iandp.happy.model.DBDataModule;
-import com.iandp.happy.model.object.CategoryProduct;
 import com.iandp.happy.model.object.Product;
+import com.iandp.happy.model.object.ProductSimple;
 
 import java.util.ArrayList;
 
@@ -17,23 +17,36 @@ public class ProductApi extends Api {
         super(context);
     }
 
-    public Product getProduct(int id){
+    public Product getProduct(int id) {
         return new Product();
     }
 
-    public ArrayList <Product> getListProduct(int lastId, int count){
+    public ArrayList<Product> getListProduct(int lastId, int count) {
         ArrayList<Product> listProduct = new ArrayList<>();
-        for (int i = lastId; i < lastId + count; i ++){
+        for (int i = lastId; i < lastId + count; i++) {
             listProduct.add(new Product());
         }
         return listProduct;
     }
 
-    public ArrayList<Product> getListProduct(){
+    public ArrayList<Product> getListProduct() {
         return DBDataModule.get(mContext).getDbHelper().getAllProduct();
     }
 
-    public long addProduct(Product product){
+    public long addProduct(Product product) {
         return DBDataModule.get(mContext).getDbHelper().addNewProduct(product);
     }
+
+    public ProductSimple addProductSimple(ProductSimple product) {
+        return DBDataModule.get(mContext).getDatabaseManager().insertProduct(product);
+    }
+
+    public void removeProductSimple(long productId) {
+        DBDataModule.get(mContext).getDatabaseManager().removeProductSimple(productId);
+    }
+
+    public ArrayList<ProductSimple> getListProductSimple(int lastId, int limit) {
+        return DBDataModule.get(mContext).getDatabaseManager().listProductSimple(lastId, limit);
+    }
+
 }

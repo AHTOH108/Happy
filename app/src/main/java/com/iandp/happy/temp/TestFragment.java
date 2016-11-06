@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.iandp.happy.R;
-import com.iandp.happy.customViews.SpinnerShops;
+import com.iandp.happy.views.SpinnerShops;
 import com.iandp.happy.model.dataBase.DBHelper;
 
 /**
